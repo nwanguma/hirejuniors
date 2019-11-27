@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "52f940004a2d18bb214427f15f257f21",
+    "revision": "a0711b648e02255212cca31c735d35c5",
     "url": "/hirejuniors/index.html"
   },
   {
-    "revision": "1e42971df55ade1b3c46",
-    "url": "/hirejuniors/static/css/main.b6a293ee.chunk.css"
+    "revision": "84415d2b3602323a62be",
+    "url": "/hirejuniors/static/css/main.9dbd1c54.chunk.css"
   },
   {
     "revision": "b64c08a83f360ececd0b",
     "url": "/hirejuniors/static/js/2.d3a95dea.chunk.js"
   },
   {
-    "revision": "1e42971df55ade1b3c46",
-    "url": "/hirejuniors/static/js/main.01c08570.chunk.js"
+    "revision": "84415d2b3602323a62be",
+    "url": "/hirejuniors/static/js/main.7c8cf538.chunk.js"
   },
   {
     "revision": "0ee5ee30d90bccc39005",

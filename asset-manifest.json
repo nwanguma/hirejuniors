@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/hirejuniors/static/css/main.b6a293ee.chunk.css",
-    "main.js": "/hirejuniors/static/js/main.01c08570.chunk.js",
-    "main.js.map": "/hirejuniors/static/js/main.01c08570.chunk.js.map",
+    "main.css": "/hirejuniors/static/css/main.9dbd1c54.chunk.css",
+    "main.js": "/hirejuniors/static/js/main.7c8cf538.chunk.js",
+    "main.js.map": "/hirejuniors/static/js/main.7c8cf538.chunk.js.map",
     "runtime-main.js": "/hirejuniors/static/js/runtime-main.8fe534be.js",
     "runtime-main.js.map": "/hirejuniors/static/js/runtime-main.8fe534be.js.map",
     "static/js/2.d3a95dea.chunk.js": "/hirejuniors/static/js/2.d3a95dea.chunk.js",
     "static/js/2.d3a95dea.chunk.js.map": "/hirejuniors/static/js/2.d3a95dea.chunk.js.map",
     "index.html": "/hirejuniors/index.html",
-    "precache-manifest.e4800110bb4b0950349f50be4d863a3a.js": "/hirejuniors/precache-manifest.e4800110bb4b0950349f50be4d863a3a.js",
+    "precache-manifest.377e44b699cd70d7706039bdb164fc02.js": "/hirejuniors/precache-manifest.377e44b699cd70d7706039bdb164fc02.js",
     "service-worker.js": "/hirejuniors/service-worker.js",
-    "static/css/main.b6a293ee.chunk.css.map": "/hirejuniors/static/css/main.b6a293ee.chunk.css.map",
+    "static/css/main.9dbd1c54.chunk.css.map": "/hirejuniors/static/css/main.9dbd1c54.chunk.css.map",
     "static/media/under_construction.svg": "/hirejuniors/static/media/under_construction.fa940b32.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.8fe534be.js",
     "static/js/2.d3a95dea.chunk.js",
-    "static/css/main.b6a293ee.chunk.css",
-    "static/js/main.01c08570.chunk.js"
+    "static/css/main.9dbd1c54.chunk.css",
+    "static/js/main.7c8cf538.chunk.js"
   ]
 }
