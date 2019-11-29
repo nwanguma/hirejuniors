@@ -6,7 +6,7 @@ export default () => {
   return (
     <div className="text-box">
       <img src={underConstruction} className="logo" alt="under construction sign" />
-      <h3 className="text"><span role="img" aria-label="sad face emoji">&#128554;</span> HireJuniors is currently under construction, please come back soon!</h3>
+      <h3 className="text"><span role="img" aria-label="sad face emoji">&#128554;</span> Site is under construction, please come back soon!</h3>
     </div>
   )
 }
