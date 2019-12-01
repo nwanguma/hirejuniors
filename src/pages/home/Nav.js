@@ -10,7 +10,6 @@ export default () => {
       </div>
       <ul className="nav__list">
         <li className="nav__list__item">Sign in</li>
-        <li className="nav__list__item">Sign up</li>
       </ul>
     </nav>
   )
