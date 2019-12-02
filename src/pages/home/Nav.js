@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 export default () => {
   return (
@@ -9,8 +10,8 @@ export default () => {
           className="logo" />
       </div>
       <ul className="nav__list">
-        <li className="nav__list__item"><a href="/dashboard">Sign in</a></li>
-        <li className="nav__list__item"><a href="/companies">For companies</a></li>
+        <NavLink className="nav__list__item" to="/dashboard">Sign in</NavLink>
+        <NavLink className="nav__list__item" to="/companies">For companies</NavLink>
       </ul >
     </nav >
   )

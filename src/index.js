@@ -9,7 +9,6 @@ import configureStore from './store/configureStore';
 
 const store = configureStore();
 
-console.log(store);
 const App = () => {
   return (
     <Provider store={store}>

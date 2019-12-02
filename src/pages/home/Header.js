@@ -1,5 +1,6 @@
 import React from 'react';
 import Nav from './Nav';
+import { Link } from 'react-router-dom';
 
 export default (props) => {
   return (
@@ -9,7 +10,7 @@ export default (props) => {
         <h1>
           <span className="heading__primary">Hire Juniors</span>
           <span className="heading__secondary">Junior friendly roles for Junior developers</span>
-          <a className="page-nav" role="button" href="/createProfile">Get started</a>
+          <Link className="page-nav" role="button" to="/createProfile">Get started</Link>
         </h1>
       </div>
     </header>

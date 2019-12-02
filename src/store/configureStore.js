@@ -1,20 +1,21 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import authentication from '../reducers/authentication';
-import filters from '../reducers/filters';
-import jobs from '../reducers/jobs';
-import profile from '../reducers/profile';
+import authReducer from '../reducers/auth';
+import filtersReducer from '../reducers/filters';
+import jobsReducer from '../reducers/jobs';
+import profileReducer from '../reducers/profile';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default () => {
-  return createStore(
+  const store = createStore(
     combineReducers({
-      authentication: authentication,
-      filters: filters,
-      jobs: jobs,
-      profile: profile,    
+      auth: authReducer,
+      filters: filtersReducer,
+      jobs: jobsReducer,
+      profile: profileReducer,
     }),
-    applyMiddleware(composeEnhancer(thunk))
-  );  
+    composeEnhancer(applyMiddleware(thunk))
+  );
+  return store
 };

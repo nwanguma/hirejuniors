@@ -1,10 +1,8 @@
-const jobs = (state = [], action) => {
+export default (state = [], action) => {
   switch (action.type) {
-    case 'ADD_JOBS':
-      return [...state, action.job]
+    case 'POST_JOB':
+      return [...state, action.job];
     default:
       return state;
   }
-};
-
-export default jobs;
+}
