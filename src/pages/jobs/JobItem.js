@@ -2,6 +2,6 @@ import React from 'react';
 
 export default () => {
   return (
-    <p>post a new job</p>
+    <p>This is for more information about page</p>
   )
-}
+};

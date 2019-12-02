@@ -9,8 +9,9 @@ export default () => {
           className="logo" />
       </div>
       <ul className="nav__list">
-        <li className="nav__list__item">Sign in</li>
-      </ul>
-    </nav>
+        <li className="nav__list__item"><a href="/dashboard">Sign in</a></li>
+        <li className="nav__list__item"><a href="/companies">For companies</a></li>
+      </ul >
+    </nav >
   )
 }

@@ -2,6 +2,8 @@ import React from 'react';
 
 export default () => {
   return (
-    <p>post a new job</p>
+    <div>
+      <p>Developer information lives here</p>
+    </div>
   )
 }

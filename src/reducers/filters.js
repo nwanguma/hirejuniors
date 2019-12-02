@@ -1,4 +1,4 @@
-const filters = (state = [], actions) => {
+const filters = (state = [], action) => {
 	switch(action.type) {
 		default:
 			return state;
