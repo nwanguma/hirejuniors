@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {createProfile} from '../actions/profile';
+import { createProfile } from '../actions/profile';
 
 export class ProfileForm extends Component {
   constructor(props) {
@@ -10,15 +10,24 @@ export class ProfileForm extends Component {
       lastname: '',
       phone: '',
       age: '',
+      gender: '',
       skills: [],
       experience: '',
       github: '',
       portfolio: '',
-      location: '',
+      country: '',
       interests: [],
       hobbies: [],
-      bio: '',      
+      bio: '',
+      prefferedwork: '',
+      prefferedsalary: '',
+      uploadCV: ''
     }
+  }
+
+  handleOnSubmit = (e) => {
+    e.preventDefault();
+    this.props.createProfile(this.state);
   }
 
   onFirstnameChange = () => {
@@ -26,50 +35,46 @@ export class ProfileForm extends Component {
   }
 
   onLastnameChange = () => {
-    
+
   }
 
   onPhoneChange = () => {
-    
+
   }
 
   onAgeChange = () => {
-    
+
   }
 
   onSkillsChange = () => {
-    
+
   }
 
   onExperienceChange = () => {
-    
+
   }
 
   onGithubChange = () => {
-    
+
   }
 
   onPortfolioChange = () => {
-    
+
   }
 
   onLocationChange = () => {
-    
+
   }
 
   onInterestsChange = () => {
-    
+
   }
 
   onHobbiesChange = () => {
-    
+
   }
 
   onBioChange = () => {
-    
-  }
-
-  handleOnSubmit = () => {
 
   }
 
@@ -77,78 +82,79 @@ export class ProfileForm extends Component {
     return (
       <form onSubmit={this.handleOnSubmit} >
         <label>Firstname
-          <input type="text" 
-            onChange={this.onFirstnameChange} 
-            placeholder="Firstname" 
-            value={this.state.firstname} 
+          <input type="text"
+            onChange={this.onFirstnameChange}
+            placeholder="Firstname"
+            value={this.state.firstname}
             autoFocus />
         </label>
         <label>Lastname
           <input type="text"
-            onChange={this.onLastnameChange} 
-            placeholder="Lastname" 
+            onChange={this.onLastnameChange}
+            placeholder="Lastname"
             value={this.state.lastname} />
         </label>
         <label>Phone number
           <input type="text"
-            onChange={this.onPhoneChange} 
-            placeholder="Phone number" 
+            onChange={this.onPhoneChange}
+            placeholder="Phone number"
             value={this.state.phone} />
         </label>
         <label>Age
           <input type="text"
-            onChange={this.onAgeChange} 
-            placeholder="Age" 
+            onChange={this.onAgeChange}
+            placeholder="Age"
             value={this.state.age} />
         </label>
         <label>Skills
           <input type="text"
-            onChange={this.onSkillsChange} 
-            placeholder="Skills" 
+            onChange={this.onSkillsChange}
+            placeholder="Skills"
             value={this.state.skills} />
         </label>
         <label>Experience
           <input type="text"
-            onChange={this.onExperienceChange} 
-            placeholder="Experience" 
+            onChange={this.onExperienceChange}
+            placeholder="Experience"
             value={this.state.experience} />
         </label>
         <label>Github
           <input type="text"
-            onChange={this.onGithubChange} 
-            placeholder="Github profile" 
+            onChange={this.onGithubChange}
+            placeholder="Github profile"
             value={this.state.github} />
         </label>
         <label>Portfolio
           <input type="text"
-            onChange={this.onPortfolioChange} 
-            placeholder="Portfolio" 
+            onChange={this.onPortfolioChange}
+            placeholder="Portfolio"
             value={this.state.portfolio} />
         </label>
         <label>Location
           <input type="text"
             onChange={this.onLocationChange}
-            placeholder="Location" 
+            placeholder="Location"
             value={this.state.location} />
         </label>
         <label>Interests
           <input type="text"
-            onChange={this.onInterestsChange} 
-            placeholder="Interests" 
+            onChange={this.onInterestsChange}
+            placeholder="Interests"
             value={this.state.interests} />
-        </label>      
+        </label>
         <label>Hobbies
           <input type="text"
-            onChange={this.onHobbiesChange} 
-            placeholder="Hobbies" 
+            onChange={this.onHobbiesChange}
+            placeholder="Hobbies"
             value={this.state.hobbies} />
         </label>
         <label>Bio
-          <textarea 
+          <textarea
             onChange={this.onBioChange}
             placeholder="Tell us about yourself"
             value={this.state.bio} />
         </label>
+        <button type="submit">{this.props.page}</button>
       </form>
     )
   }

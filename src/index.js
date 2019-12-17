@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AppRouter from './router/AppRouter';
-import './firebase/firebase';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './store/configureStore';

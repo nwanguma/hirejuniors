@@ -1,33 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import {createProfile} from '../actions/profile';
+import { createProfile } from '../actions/profile';
 
 export const ProfileForm = () => {
+  const [title, setTitle] = useState('');
+  const [companyInfo, setcompanyInfo] = useState('');
+  const [description, setDescription] = useState('');
+  const [requirements, setRequirements] = useState('');
+  const [location, setLocation] = useState('');
+  const [contact, setContact] = useState('');
+  const [job, setJob] = useState({ title, companyInfo, description, requirements, location, contact });
+
   const handleSumbitForm = (e) => {
     e.preventDefault();
-    
+
   }
+
+  const onTitleChange = (e) => {
+
+  }
+
+  const onCompanyInfoChange = (e) => {
+
+  }
+
+  const onDescriptionChange = (e) => {
+
+  }
+
+  const onRequirementsChange = (e) => {
+
+  }
+
+  const onLocationChange = (e) => {
+
+  }
+
+  const onContactChange = (e) => {
+
+  }
+
   return (
     <form>
-      <label>Firstname<input type="text" /></label>
-      <label>Lastname<input type="text"/></label>
-      <label>Phone number<input type="text"/></label>
-      <label>Age<input type="text"/></label>
-      <label>Skills<input type="text"/></label>
-      <label>Experience<input type="text"/></label>
-      <label>Github<input type="text"/></label>
-      <label>Portfolio<input type="text"/></label>
-      <label>Preferred salary<input type="text"/></label>
-      <label>Upload CV<input type="text"/></label>
-      <label>Designation<input type="text"/></label>
-      <label>Location<input type="text"/></label>
-      <label>Hobbies<input type="text"/></label>
-      <label>Interests<input type="text"/></label>
-      <label>Stuff<input type="text"/></label>
-      <label>Stuff<input type="text"/></label>
-      <label>Stuff<input type="text"/></label>
-      <label>Stuff<input type="text"/></label>
-      <label>Tell us about you<textarea /></label>
+      <label>Title
+        <input type="text"
+          placeholder="Title"
+          value={title}
+          onChange={onTitleChange} />
+      </label>
+      <label>Organization description
+        <input type="text"
+          placeholder="Organization description"
+          value={CompanyInfo}
+          onChange={onCompanyInfoChange}
+        />
+      </label>
+      <label>Requirements
+        <input type="text"
+          placeholder="Requirements"
+          value={requirements}
+          onChange={onRequirementsChange}
+        />
+      </label>
+      <label>Location
+        <input type="text"
+          placeholder="Location"
+          value={location}
+          onChange={onLocationChange}
+        />
+      </label>
+      <label>Description
+        <input type="text"
+          placeholder="Description URL"
+          value={description}
+          onChange={onDescriptionChange}
+        />
+      </label>
+      <label>Contact
+      <input type="text"
+          placeholder="Contact email"
+          value={contact}
+          onChange={onContactChange}
+        />
+      </label>
     </form>
   )
 }

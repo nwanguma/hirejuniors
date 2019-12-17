@@ -1,4 +1,5 @@
 import React from 'react';
+import ProfileForm from '../../components/ProfileForm.js';
 import { connect } from 'react-redux';
 import { createProfile, editProfile } from '../../actions/profile';
 
@@ -21,22 +22,24 @@ const demoProfile = {
   salary: ''
 }
 
-export const CreateProfile = ({ dispatch, profile }) => {
-  console.log(profile)
+export const AddProfile = ({ dispatch, profileInfo }) => {
+  console.log(profileInfo);
+  const onCreateProfile = (profile) => {
+    dispatch(createProfile(profile));
+  }
   return (
     <div>
       <p>This is the create profile page</p>
-      <button onClick={() => {
-        dispatch(createProfile(demoProfile))
-      }}>Create Profile</button>
+      <ProfileForm page="Create Profile"
+        createProfile={onCreateProfile}/>
     </div>
   )
 };
 
 const mapStateToProps = (state) => {
   return {
-    profile: state.profile
+    profileInfo: state.profile
   }
 }
 
-export default connect(mapStateToProps)(CreateProfile);
+export default connect(mapStateToProps)(AddProfile);

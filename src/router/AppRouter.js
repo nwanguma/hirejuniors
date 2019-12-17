@@ -11,6 +11,8 @@ import Post from '../pages/post/Post';
 import Developers  from '../pages/developers/Developers';
 import Companies  from '../pages/companies/Companies';
 import NotFoundPage from '../pages/notFoundPage/NotFoundPage';
+import SignIn from '../pages/signIn/SignIn.js';
+import SignUp from '../pages/signUp/SignUp.js';
 
 export default () => {
   return (
@@ -24,7 +26,9 @@ export default () => {
         <Route path="/jobs"><Jobs /></Route>
         <Route path="/jobitem"><JobItem /></Route>        
         <Route path="/post"><Post /></Route>
-        <Route path="/developers"><Developers /></Route>   
+        <Route path="/developers"><Developers /></Route>  
+        <Route path="/signIn"><SignIn /></Route>   
+        <Route path="/signUp"><SignUp /></Route>   
         <Route path="/companies"><Companies /></Route>                     
         <Route><NotFoundPage /></Route>
       </Switch>
