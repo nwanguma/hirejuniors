@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const now = new Date();
 
-const Jobs = new mongoose.Schema({
+const JobSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,

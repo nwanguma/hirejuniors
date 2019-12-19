@@ -12,11 +12,12 @@ const UserSchema = new mongoose.Schema({
   },
 
   date: {
+    type: Number,
     default: Date.now()
   }
 });
 
 
-const User = mongoose.model('Recruiters', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
