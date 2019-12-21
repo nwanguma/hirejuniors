@@ -1,3 +1,5 @@
 const mongoDevURI = 'mongodb://localhost:27017';
 
-module.exports = { mongoDevURI }
+const secretOrKey = 'thanosornot0007$';
+
+module.exports = { mongoDevURI, secretOrKey };
