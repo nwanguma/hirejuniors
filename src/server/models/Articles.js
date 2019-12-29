@@ -19,6 +19,12 @@ const ArticleSchema = new mongoose.Schema({
   tags: {
     type: String,
     required: true
+  },
+
+  date: {
+    type: Number,
+    required: true,
+    default: Date.now()
   }
 });
 

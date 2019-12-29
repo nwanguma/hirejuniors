@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Job = require('../../models/Jobs');
 
+//who can post jobs
+/////////users with roles admin and recruiter
+//who can view jobs
+/////////authenticated users
+//who can update jobs
+////////users with roles admin and the specific user who posted the job
+//who can delete job
+////////users with roles admin and the specific user who posted the job
+
 router.route('/')
   .get((req, res) => {
     Job.find().then((docs) => {

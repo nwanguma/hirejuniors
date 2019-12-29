@@ -11,12 +11,16 @@ const UserSchema = new mongoose.Schema({
     required: true
   },
 
+  role: {
+    type: String,
+    required: true,
+  },
+
   date: {
     type: Number,
     default: Date.now()
   }
 });
-
 
 const User = mongoose.model('User', UserSchema);
 

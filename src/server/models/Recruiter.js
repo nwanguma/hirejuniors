@@ -22,11 +22,11 @@ const RecruiterSchema = new mongoose.Schema({
   },
 
   jobsPostedCount: {
-    type: String,
-    required: true
+    type: Number,
+    default: 0
   }
 });
 
-const Recruiter = mongoose.model('Recruiters', RecruiterSchema);
+const Recruiter = mongoose.model('Recruiter', RecruiterSchema);
 
 module.exports = Recruiter;
