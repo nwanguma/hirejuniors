@@ -3,11 +3,11 @@ const { mongoose } = require('./db/mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-const { router: users } = require('./routes/api/users');
-const { router: talent } = require('./routes/api/talent');
-const { router: jobs } = require('./routes/api/jobs');
-const { router: recruiters } = require('./routes/api/recruiters');
-const { router: articles } = require('./routes/api/articles');
+const { router: users } = require('./api/routes/users');
+const { router: devProfile } = require('./api/routes/devProfile');
+const { router: jobs } = require('./api/routes/jobs');
+const { router: recruiterProfile } = require('./api/routes/recruiterProfile');
+const { router: articles } = require('./api/routes/articles');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,8 +21,8 @@ app.use(bodyParser.json());
 
 //Express route middleware
 app.use('/api/users', users);
-app.use('/api/recruiters', recruiters);
-app.use('/api/talent', talent);
+app.use('/api/recruiterProfile', recruiterProfile);
+app.use('/api/devProfile', devProfile);
 app.use('/api/jobs', jobs);
 app.use('/api/articles', articles);
 

@@ -1,65 +1,60 @@
 const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const now = new Date();
 
-const JobSchema = new mongoose.Schema({
+const JobSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+
   title: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3
   },
 
   company: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3
   },
 
   location: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3
   },
 
   description: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3
   },
 
   requirement: {
     type: String,
     required: true,
-    trim: true,
-    minlength: 3
   },
 
   datePosted: {
     type: Number,
-    default: now.getTime()
+    default: now
   },
 
   lastEdited: {
     type: Number,
-    default: now.getTime()
+    default: now
   },
 
   deadline: {
-    type: Number,
-    default: now.getTime()
+    type: Date,
+    default: now
   },
 
   contact: {
     type: String,
-    trim: true,
-    minlength: 15
+    required: true
   }
 });
 
-const Job = mongoose.model('Job', JobSchema);
+const Job = model('Job', JobSchema, 'jobs');
 
 module.exports = Job;
