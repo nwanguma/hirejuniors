@@ -112,6 +112,7 @@ const DeveloperProfileSchema = new Schema({
 
   website: {
     type: String,
+    required: true
   },
 
   linkedinURL: {

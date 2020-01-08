@@ -3,9 +3,11 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
-const router = express.Router();
 const Job = require('../models/Job');
+const User = require('../models/User');
 const { secretOrKey } = require('../../config/keys');
+
+const router = express.Router();
 
 // @route GET api/jobs
 // @desc Get all jobs
@@ -20,43 +22,39 @@ router.get('/', (req, res) => {
 // @desc Create new job
 // @access Private Admin and Recruiter
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const token = req.header('Authorization').slice(7);
-
   const { title, company, location, description, requirement, contact, deadline } = req.body;
 
-  jwt.verify(token, secretOrKey, (err, decoded) => {
-    if (!decoded) {
-      new Error('Failed to verify user token' + err);
-    } else if (decoded) {
+  const role = req.user.role;
 
-      const role = decoded.role;
+  if (role === 'admin' || role === 'recruiter') {
+    const job = new Job({
+      title,
+      company,
+      location,
+      description,
+      requirement,
+      contact,
+      deadline
+    });
 
-      if (role === 'admin' || role === 'recruiter') {
-        const job = new Job({
-          title,
-          company,
-          location,
-          description,
-          requirement,
-          contact,
-          deadline
-        });
+    job.save()
+      .then((doc) => {
+        const job = _.pick(doc,
+          ['title', 'company', 'location', 'description',
+            'requirement', 'contact', 'deadline']);
 
-        job.save()
-          .then((doc) => {
-            const job = _.pick(doc,
-              ['title', 'company', 'location', 'description',
-                'requirement', 'contact', 'deadline']);
-            res.status(201).json({
-              message: "success",
-              body: doc
-            })
-          }).catch((err) => {
-            res.status(400).json({ error: 'Failed to create job' });
-          })
-      }
-    }
-  });
+        User.findByIdAndUpdate(req.user._id, { $push: { jobs: doc._id } }, { new: false })
+          .then((user) => console.log(user))
+          .catch((err) => console.log(error));
+
+        res.status(201).json({
+          message: "success",
+          body: doc
+        })
+      }).catch((err) => {
+        res.status(400).json({ error: 'Failed to create job' });
+      })
+  }
 });
 
 // @route GET api/jobs/id
@@ -88,77 +86,59 @@ router.route('/:id')
   // @desc Get specific job by id
   // @access Private
   .delete(passport.authenticate('jwt', { session: false }), (req, res) => {
-    const token = req.header('Authorization').slice(7);
+    const role = req.user.role;
 
-    jwt.verify(token, secretOrKey, (err, decoded) => {
-      if (!decoded) {
-        new Error('Failed to verify user token' + err);
-      } else if (decoded) {
+    if (role === 'admin' || role === 'recruiter') {
+      const id = req.params.id;
 
-        const role = decoded.role;
+      Job.findByIdAndRemove(id).then((doc) => {
+        if (!doc) return res.status(400).json({ error: 'Job not found' });
 
-        if (role === 'admin' || role === 'recruiter') {
-          const id = req.params.id;
+        const job = _.pick(doc,
+          ['title', 'company', 'location', 'description',
+            'requirement', 'contact', 'deadline']);
 
-          Job.findByIdAndRemove(id).then((doc) => {
-            if (!doc) return res.status(400).json({ error: 'Job not found' });
-
-            const job = _.pick(doc,
-              ['title', 'company', 'location', 'description',
-                'requirement', 'contact', 'deadline']);
-
-            res.send({
-              message: 'Success',
-              body: job
-            });
-          }).catch((err) => {
-            res.status(400).send('An error occured')
-          })
-        }
-      }
-    });
+        res.send({
+          message: 'Success',
+          body: job
+        });
+      }).catch((err) => {
+        res.status(400).send('An error occured')
+      })
+    }
   })
   // @route GET api/jobs/id
   // @desc Get specific job by id
   // @access Private
   .patch(passport.authenticate('jwt', { session: false }), (req, res) => {
-    const token = req.header('Authorization').slice(7);
+    const role = req.user.role;
 
-    jwt.verify(token, secretOrKey, (err, decoded) => {
-      if (!decoded) {
-        new Error('Failed to verify user token' + err);
-      } else if (decoded) {
+    if (role === 'admin' || role === 'recruiter') {
+      const id = req.params.id;
 
-        const role = decoded.role;
+      Job.findById()
+        .then()
+        .catch()
 
-        if (role === 'admin' || role === 'recruiter') {
-          const id = req.params.id;
+      Job.findByIdAndUpdate(id, {
+        $set: {
 
-          Job.findById()
-            .then()
-            .catch()
-
-          Job.findByIdAndUpdate(id, {
-            $set: {
-
-            }
-          }).then((doc) => {
-            if (!doc) return res.status(400).json({ error: 'Job not found' });
-
-            const job = _.pick(doc,
-              ['title', 'company', 'location', 'description',
-                'requirement', 'contact', 'deadline']);
-
-            res.send({
-              message: 'Success',
-              body: job
-            });
-          }).catch((err) => {
-            res.status(400).send('An error occured');
-          });
         }
-      }
-    });
+      }).then((doc) => {
+        if (!doc) return res.status(400).json({ error: 'Job not found' });
+
+        const job = _.pick(doc,
+          ['title', 'company', 'location', 'description',
+            'requirement', 'contact', 'deadline']);
+
+        res.send({
+          message: 'Success',
+          body: job
+        });
+      }).catch((err) => {
+        res.status(400).send('An error occured');
+      });
+    }
   });
 
 module.exports = { router };

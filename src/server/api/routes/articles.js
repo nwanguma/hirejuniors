@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const { secretOrKey } = require('../../config/keys');
 const Article = require('../models/Article');
+const User = require('../models/User');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { role } = req.user;
@@ -23,8 +24,14 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       .save()
       .then((doc) => {
         const article = _.pick(doc, ['title', 'body', 'author', 'tags']);
+
+        User.findByIdAndUpdate(req.user._id, { $push: { articles: doc._id } }, { new: false })
+          .then((user) => console.log(user))
+          .catch((err) => console.log(error));
+
         res.status(201).json(article);
       }).catch((err) => {
+        console.log(err);
         res.status(400).send({
           error: 'An error occured!',
         });

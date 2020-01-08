@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const { Schema, model } = require('mongoose');
 
 const ArticleSchema = new Schema({
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+
   title: {
     type: String,
     required: true,
@@ -10,11 +15,6 @@ const ArticleSchema = new Schema({
   body: {
     type: String,
     required: true,
-  },
-
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
   },
 
   tags: {

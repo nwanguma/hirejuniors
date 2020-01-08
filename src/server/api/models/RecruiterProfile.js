@@ -27,7 +27,7 @@ const RecruiterProfileSchema = new Schema({
     required: true,
   },
 
-  jobsPosted: {
+  jobs: {
     type: Schema.Types.ObjectId,
     ref: 'Job'
   }

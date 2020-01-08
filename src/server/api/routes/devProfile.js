@@ -5,6 +5,8 @@ const passport = require('passport');
 const _ = require('lodash');
 
 const DeveloperProfile = require('../models/DeveloperProfile');
+const RecruiterProfile = require('../models/RecruiterProfile');
+const AdminProfile = require('../models/AdminProfile');
 
 // @route GET route/api/developers/create
 // @desc Return developers
@@ -54,7 +56,9 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   DeveloperProfile.findOne({ user: req.user._id })
     .populate('user')
-    .then((profile) => res.json(profile))
+    .then((profile) => {
+      res.json(profile)
+    })
     .catch((err) => console.log(err))
 })
 
