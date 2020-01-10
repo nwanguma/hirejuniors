@@ -27,10 +27,10 @@ const RecruiterProfileSchema = new Schema({
     required: true,
   },
 
-  jobs: {
+  jobs: [{
     type: Schema.Types.ObjectId,
     ref: 'Job'
-  }
+  }]
 });
 
 const RecruiterProfile = model('RecruiterProfile', RecruiterProfileSchema, 'recruiters');

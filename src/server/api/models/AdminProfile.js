@@ -15,7 +15,17 @@ const AdminProfileSchema = new Schema({
   lastname: {
     type: String,
     required: true,
-  }
+  },
+
+  articles: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Article'
+  }],
+
+  jobs: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Article'
+  }]
 });
 
 const AdminProfile = model('AdminProfile', AdminProfileSchema, 'admins');

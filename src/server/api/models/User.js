@@ -25,17 +25,7 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     default: Date.now()
-  },
-
-  articles: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Article'
-  }],
-
-  jobs: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Job'
-  }]
+  }
 });
 
 const User = model('User', UserSchema, 'users');

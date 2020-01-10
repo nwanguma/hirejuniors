@@ -7,6 +7,7 @@ const { router: users } = require('./api/routes/users');
 const { router: devProfile } = require('./api/routes/devProfile');
 const { router: jobs } = require('./api/routes/jobs');
 const { router: recruiterProfile } = require('./api/routes/recruiterProfile');
+const { router: adminProfile } = require('./api/routes/adminProfile');
 const { router: articles } = require('./api/routes/articles');
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.use('/api/users', users);
 app.use('/api/recruiterProfile', recruiterProfile);
 app.use('/api/devProfile', devProfile);
+app.use('/api/adminProfile', adminProfile);
 app.use('/api/jobs', jobs);
 app.use('/api/articles', articles);
 
