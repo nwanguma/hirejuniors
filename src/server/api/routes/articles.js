@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const { secretOrKey } = require('../../config/keys');
 const Article = require('../models/Article');
 const User = require('../models/User');
+const AdminProfile = require('../models/AdminProfile');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { role } = req.user;
@@ -20,14 +21,16 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       tags,
     });
 
+    console.log(AdminProfile.articles);
+
     article
       .save()
       .then((doc) => {
         const article = _.pick(doc, ['title', 'body', 'author', 'tags']);
 
-        User.findByIdAndUpdate(req.user._id, { $push: { articles: doc._id } }, { new: false })
+        AdminProfile.findByIdAndUpdate({ user: req.user._id }, { $push: { articles: doc._id } }, { new: false })
           .then((user) => console.log(user))
-          .catch((err) => console.log(error));
+          .catch((err) => console.log(err));
 
         res.status(201).json(article);
       }).catch((err) => {

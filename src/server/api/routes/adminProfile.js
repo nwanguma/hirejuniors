@@ -17,25 +17,27 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
     const Admin = new AdminProfile({
       user: req.user._id,
       firstname,
+      lastname
     });
 
     Admin.save().then((doc) => {
-      res.json({
+      res.status(201).json({
         body: doc
       });
     }).catch((err) => {
-      console.log(err);
-      res.header(400).send(err);
+      res.header(400).send({
+        message: err.message
+      });
     });
   } else {
-    return res.status(401).json({ error: 'Unauthorized user!' });
+    return res.status(403);
   }
 })
-// @route GET route/api/Admin
-// @desc Return Admins
-// @acess Private
+// @route GET /api/admin
+// @desc Return Admin profile
+// @access Private
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  AdminProfile.findOne({ user: req.user._id })
+  AdminProfile.find()
     .populate('user')
     .then((profile) => res.json(profile))
     .catch((err) => console.log(err))

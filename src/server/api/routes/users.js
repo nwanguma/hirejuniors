@@ -10,48 +10,53 @@ const User = require('../models/User');
 const router = express.Router();
 
 // @route POST api/users/register
-// @desc Register new user
+// @desc Register users
 // @access Public
 router.post('/register', (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
-    if (user) return res.status(400).json({ error: 'User already exists' });
+    if (user) return res.status(409).json({ message: 'User already exists!' });
+
+    const { email, password, username, role } = req.body;
 
     const newUser = {
-      email: req.body.email,
-      password: req.body.password,
-      username: req.body.username,
-      role: req.body.role
+      email,
+      password,
+      username,
+      role
     };
 
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) new Error('error' + err);
+        if (err) throw err;
 
         newUser.password = hash;
 
         const user = new User(newUser);
 
         user.save().then(user => {
-          const payload = { username: user.username, role: user.role };
-          const displayedUser = _.pick(user, ['email', 'username', 'role', 'date']);
+          const payload = { username: user.username };
 
           jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
             if (err) new Error('Failed to generate token' + err);
 
-            res.header('Authorization', `Bearer ${token}`).json({
-              success: true,
-              user: displayedUser
+            res.status(201).header('Authorization', `Bearer ${token}`).json({
+              body: user
             });
           });
         }).catch(err => {
           res.status(400).json({
-            success: false,
-            error: err
+            message: err.message,
+            code: err.code
           });
         })
       });
     });
-  });
+  }).catch((err) => {
+    res.status(400).json({
+      message: err.message,
+      code: err.code
+    });
+  })
 });
 
 // @route POST api/users/login
@@ -73,22 +78,25 @@ router.post('/login', (req, res) => {
   }
 
   User.findOne(loginCredentials).then(user => {
-    if (!user) return res.status(404).json({ email: 'User does not exist' });
+    if (!user) return res.status(404).json({ message: 'User does not exist' });
 
     bcrypt.compare(password, user.password).then(isMatch => {
-      if (!isMatch) return res.status(400).json({ password: 'Password incorrect' });
+      if (!isMatch) return res.status(401).json({ message: 'Password incorrect' });
 
-      const payload = { username: user.username, role: user.role };
+      const payload = { username: user.username };
 
       jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
         if (err) new Error('Failed to generate token' + err);
 
         res.header('Authorization', `Bearer ${token}`).json({
-          success: true
+          success: true,
+          body: user
         });
       });
     });
-  });
+  }).catch((err) => {
+    res.status(400).json({ message: err.message });
+  })
 });
 
 // @route POST api/users/current
@@ -98,10 +106,16 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
   const id = req.user._id;
 
   User.findById(id)
-    .populate('articles')
-    .exec()
-    .then((user) => res.json(user))
-    .catch((err) => console.log(user))
+    .then((user) => {
+      if (!user) return res.status(404).json({ message: 'User does not exist!' });
+
+      res.json({
+        body: user
+      })
+    })
+    .catch((err) => res.json({
+      message: err.message
+    }))
 });
 
 module.exports = { router };
