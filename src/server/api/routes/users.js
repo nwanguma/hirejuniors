@@ -14,49 +14,60 @@ const router = express.Router();
 // @access Public
 router.post('/register', (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
-    if (user) return res.status(409).json({ message: 'User already exists!' });
+    if (user) return res.status(409).json({ message: 'Email already registered!' });
 
     const { email, password, username, role } = req.body;
 
-    const newUser = {
-      email,
-      password,
-      username,
-      role
-    };
+    User.findOne({ username })
+      .then(user => {
+        if (user) return res.status(409).json({ message: 'Username taken!' });
 
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
+        const newUser = {
+          email,
+          password,
+          username,
+          role
+        };
 
-        newUser.password = hash;
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
 
-        const user = new User(newUser);
+            newUser.password = hash;
 
-        user.save().then(user => {
-          const payload = { username: user.username };
+            const user = new User(newUser);
 
-          jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
-            if (err) new Error('Failed to generate token' + err);
+            user.save().then(user => {
+              const payload = { username: user.username };
 
-            res.status(201).header('Authorization', `Bearer ${token}`).json({
-              body: user
-            });
+              jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
+                if (err) new Error('Failed to generate token' + err);
+
+                res.status(201).header('Authorization', `Bearer ${token}`).json({
+                  body: user
+                });
+              });
+            }).catch(err => {
+              res.status(400).json({
+                message: err.message,
+                code: err.code
+              });
+            })
           });
-        }).catch(err => {
-          res.status(400).json({
-            message: err.message,
-            code: err.code
-          });
-        })
-      });
-    });
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          message: err.message,
+          code: err.code
+        });
+      })
   }).catch((err) => {
     res.status(400).json({
       message: err.message,
       code: err.code
     });
-  })
+  });
 });
 
 // @route POST api/users/login
@@ -96,7 +107,7 @@ router.post('/login', (req, res) => {
     });
   }).catch((err) => {
     res.status(400).json({ message: err.message });
-  })
+  });
 });
 
 // @route POST api/users/current

@@ -34,79 +34,108 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   }
 })
 // @route GET /api/admin
-// @desc Return Admin profile
+// @desc Get all Admins
 // @access Private
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
   AdminProfile.find()
     .populate('user')
-    .then((profile) => res.json(profile))
-    .catch((err) => console.log(err))
-})
+    .then((profiles) => {
+      if (profiles.length === 0) return res.status(404).json({ message: 'No profiles to display!' });
 
-// @route GET route/api/Admin/id
-// @desc Return specific Admin
-// @acess Private
+      res.json({
+        body: profiles
+      })
+    })
+    .catch((err) => {
+      res.status(400).json({
+        message: err.message
+      });
+    });
+})
+// @route GET api/Admin/id
+// @desc Get Admin profile for users
+// @access Private
 router.route('/:id')
   .get(passport.authenticate('jwt', { session: false }), (req, res) => {
 
     const id = req.params.id;
 
     AdminProfile.findById(id)
+      .populate('articles')
+      .populate('jobs')
+      .exec()
       .then((doc) => {
-        if (!doc) new Error(err);
+        if (!doc) return res.status(404).json({ message: 'Mp profile to display!' });
 
         res.json({
-          message: 'Success',
-          body: AdminProfile
+          body: doc
         })
       }).catch((err) => {
         res.status(400).json({
-          success: false,
-          error: err
+          name: err.name,
+          message: err.message
         })
       })
   })
-  // @route GET route/api/Admin/id
-  // @desc Return specific Admin
-  // @acess Private
+  // @route PATCH api/Admin/id
+  // @desc Update admin profile by id
+  // @access Private
   .patch(passport.authenticate('jwt', { session: false }), (req, res) => {
 
     const id = req.params.id;
 
     AdminProfile.findById(id)
-      .then((doc) => {
-        if (!doc) new Error(err);
+      .then((profile) => {
+        if (!profile) return res.status(404).json({ message: 'No profile to display!' });
 
-        res.json({
-          message: 'Success',
-          body: AdminProfile
-        })
-      }).catch((err) => {
+        const { firstname, lastname } = profile;
+        const { newFirstname, newLastname } = req.body;
+
+        AdminProfile.findByIdAndUpdate(id,
+          {
+            $set:
+              {
+                firstname: newFirstname || firstname,
+                lastname: newLastname || lastname
+              }
+          }, { new: false })
+          .then((profile) => {
+            if (!profile) return res.status(404).json({ message: 'No profile to display!' });
+
+            res.json({
+              body: profile
+            })
+          }).catch((err) => {
+            res.status(400).json({
+              error: err.message
+            })
+          })
+      })
+      .catch(err => {
         res.status(400).json({
-          success: false,
-          error: err
+          name: err.name,
+          message: err.message
         })
       })
   })
-  // @route GET route/api/Admin/id
-  // @desc Return specific Admin
-  // @acess Private
+  // @route DELETE api/Admin/id
+  // @desc Delete admin profile
+  // @access Private
   .delete(passport.authenticate('jwt', { session: false }), (req, res) => {
 
     const id = req.params.id;
 
-    AdminProfile.findById(id)
-      .then((doc) => {
-        if (!doc) new Error(err);
+    AdminProfile.findByIdAndRemove(id)
+      .then((profile) => {
+        if (!profile) return res.status(404).json({ message: 'Profile not found!' });
 
-        res.json({
-          message: 'Success',
-          body: AdminProfile
+        res.status(202).json({
+          message: 'Success'
         })
       }).catch((err) => {
         res.status(400).json({
-          success: false,
-          error: err
+          name: err.name,
+          message: err.message
         })
       })
   })

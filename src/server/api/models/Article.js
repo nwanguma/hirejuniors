@@ -4,7 +4,7 @@ const { Schema, model } = require('mongoose');
 const ArticleSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'AdminProfile'
   },
 
   title: {

@@ -5,6 +5,7 @@ const _ = require('lodash');
 
 const Job = require('../models/Job');
 const User = require('../models/User');
+const RecruiterProfile = require('../models/RecruiterProfile');
 const { secretOrKey } = require('../../config/keys');
 
 const router = express.Router();
@@ -13,8 +14,15 @@ const router = express.Router();
 // @desc Get all jobs
 // @access Public
 router.get('/', (req, res) => {
-  Job.find().then((docs) => {
-    res.json(docs)
+  Job.find().then((jobs) => {
+    if (jobs.length === 0) return res.status(404).json({ message: 'No jobs to display' });
+
+    res.json(jobs)
+  }).catch(err => {
+    res.status(400).json({
+      name: err.name,
+      message: err.message
+    })
   });
 });
 
