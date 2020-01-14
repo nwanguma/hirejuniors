@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
 const Job = require('../models/Job');
-const User = require('../models/User');
 const RecruiterProfile = require('../models/RecruiterProfile');
 const { secretOrKey } = require('../../config/keys');
 
@@ -30,11 +29,11 @@ router.get('/', (req, res) => {
 // @desc Create new job
 // @access Private Admin and Recruiter
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { title, company, location, description, requirement, contact, deadline } = req.body;
-
   const role = req.user.role;
 
   if (role === 'admin' || role === 'recruiter') {
+    const { title, company, location, description, requirement, contact, deadline } = req.body;
+
     const job = new Job({
       title,
       company,
@@ -51,16 +50,19 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           ['title', 'company', 'location', 'description',
             'requirement', 'contact', 'deadline']);
 
-        User.findByIdAndUpdate(req.user._id, { $push: { jobs: doc._id } }, { new: false })
-          .then((user) => console.log(user))
-          .catch((err) => console.log(error));
+        RecruiterProfile.findByIdAndUpdate(req.user._id, { $push: { jobs: doc._id } }, { new: false })
+          .then((user) => user)
+          .catch((err) => err);
 
         res.status(201).json({
           message: "success",
-          body: doc
+          body: job
         })
       }).catch((err) => {
-        res.status(400).json({ error: 'Failed to create job' });
+        res.status(400).json({
+          name: err.message,
+          message: err.message
+        });
       })
   }
 });
@@ -70,28 +72,35 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 // @access Private
 router.route('/:id')
   .get(passport.authenticate('jwt', { session: false }), (req, res) => {
-    const id = req.params.id;
-    Job.findById(id).then((doc) => {
-      if (!doc) {
-        return res.header(404).json({ error: 'Job not found' });
-      }
+    const role = req.user.role;
 
-      const job = _.pick(doc,
-        ['title', 'company', 'location', 'description',
-          'requirement', 'contact', 'deadline']);
+    if (role === 'admin' || role === 'recruiter') {
+      const id = req.params.id;
 
-      res.json({
-        message: 'Success',
-        body: job
-      });
-    }).catch((err) => {
-      res.status(400).json({
-        error: 'Bad request'
-      });
-    })
+      Job.findById(id).then((doc) => {
+        if (!doc) {
+          return res.header(404).json({ message: 'Job not found' });
+        }
+
+        const job = _.pick(doc,
+          ['title', 'company', 'location', 'description',
+            'requirement', 'contact', 'deadline']);
+
+        res.json({
+          body: job
+        });
+      }).catch((err) => {
+        res.status(400).json({
+          name: err.name,
+          message: err.message
+        });
+      })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
+    }
   })
-  // @route GET api/jobs/id
-  // @desc Get specific job by id
+  // @route DELETE api/jobs/id
+  // @desc Delete specific job by id
   // @access Private
   .delete(passport.authenticate('jwt', { session: false }), (req, res) => {
     const role = req.user.role;
@@ -102,6 +111,12 @@ router.route('/:id')
       Job.findByIdAndRemove(id).then((doc) => {
         if (!doc) return res.status(400).json({ error: 'Job not found' });
 
+        RecruiterProfile.findOneAndUpdate({ user: req.user._id },
+          { $pull: { articles: doc._id } },
+          { new: true })
+          .then((user) => user)
+          .catch(err => err)
+
         const job = _.pick(doc,
           ['title', 'company', 'location', 'description',
             'requirement', 'contact', 'deadline']);
@@ -111,12 +126,17 @@ router.route('/:id')
           body: job
         });
       }).catch((err) => {
-        res.status(400).send('An error occured')
+        res.status(400).json({
+          name: err.name,
+          message: err.message
+        })
       })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
     }
   })
-  // @route GET api/jobs/id
-  // @desc Get specific job by id
+  // @route PATCH api/jobs/id
+  // @desc Update specific job by id
   // @access Private
   .patch(passport.authenticate('jwt', { session: false }), (req, res) => {
     const role = req.user.role;
@@ -124,28 +144,51 @@ router.route('/:id')
     if (role === 'admin' || role === 'recruiter') {
       const id = req.params.id;
 
-      Job.findById()
-        .then()
-        .catch()
+      Job.findById(id)
+        .then(job => {
+          if (!job) return res.status(404).json({ message: 'Job not found' });
 
-      Job.findByIdAndUpdate(id, {
-        $set: {
+          const { title, company, location, description, requirement, contact } = job;
+          const { titleUpdate, CompanyUpdate, locationUpdate,
+            descriptionUpdate, requirementUpdate, contactUpdate, lastEdited } = req.body;
 
-        }
-      }).then((doc) => {
-        if (!doc) return res.status(400).json({ error: 'Job not found' });
+          Job.findByIdAndUpdate(id, {
+            $set: {
+              title: titleUpdate || title,
+              company: companyUpdate || company,
+              location: locationUpdate || location,
+              description: descriptionUpdate || description,
+              requirement: requirementUpdate || requirement,
+              contact: contactUpdate || contact,
+              lastEdited: lastEditedUpdate
+            }
+          }, { new: true })
+            .then((doc) => {
+              if (!doc) return res.status(400).json({ message: 'Job not found' });
 
-        const job = _.pick(doc,
-          ['title', 'company', 'location', 'description',
-            'requirement', 'contact', 'deadline']);
+              const job = _.pick(doc,
+                ['title', 'company', 'location', 'description',
+                  'requirement', 'contact', 'deadline']);
 
-        res.send({
-          message: 'Success',
-          body: job
-        });
-      }).catch((err) => {
-        res.status(400).send('An error occured');
-      });
+              res.json({
+                message: 'Success',
+                body: job
+              });
+            }).catch((err) => {
+              res.status(400).json({
+                name: err.name,
+                message: err.message
+              })
+            });
+        })
+        .catch(err => {
+          res.status(400).json({
+            name: err.name,
+            message: err.message
+          })
+        })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
     }
   });
 

@@ -110,8 +110,8 @@ router.post('/login', (req, res) => {
   });
 });
 
-// @route POST api/users/current
-// @desc Return current user
+// @route GET api/users/current
+// @desc Get current user
 // @access Private
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
   const id = req.user._id;
@@ -128,5 +128,29 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
       message: err.message
     }))
 });
+
+// @route DELETE api/users/current
+// @desc Delete user
+// @access Private
+router.delete('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const role = req.user.role;
+
+  if (role === 'admin') {
+    const id = req.body.id;
+
+    User.findByIdAndDelete(id)
+      .then((user) => {
+        if (!user) return res.status(404).json({ message: 'User does not exist!' })
+
+        res.status(202).json({ message: 'success', body: user })
+      })
+      .catch((err) => {
+        res.status(400).json({
+          name: err.name,
+          message: err.message
+        })
+      })
+  }
+})
 
 module.exports = { router };

@@ -5,129 +5,194 @@ const passport = require('passport');
 const _ = require('lodash');
 
 const DeveloperProfile = require('../models/DeveloperProfile');
-const RecruiterProfile = require('../models/RecruiterProfile');
 const AdminProfile = require('../models/AdminProfile');
 
 // @route GET route/api/developers/create
-// @desc Return developers
+// @desc create developer profile
 // @acess Private Admin and Developer
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
-  let { firstname, lastname, age, sex, skills, bio, experience,
-    education, location, experienceLength, githubURL, isEmployed, about
-  } = req.body;
-
-  skills = skills.split(',');
 
   if (role === 'developer' || role === 'admin') {
-    const developer = new DeveloperProfile({
-      user: req.user._id,
-      firstname,
-      lastname,
-      age,
-      sex,
-      skills,
-      bio,
-      experience,
-      education,
-      location,
-      experienceLength,
-      githubURL,
-      isEmployed,
-      about
-    });
-    developer.save().then((doc) => {
-      const developer = _.pick(doc, ['firstname', 'lastname', 'age', 'email',
-        'education', 'location', 'experienceLength', 'isEmployed', 'about'])
-      res.json({
-        body: doc
-      });
-    }).catch((err) => {
-      console.log(err)
-      res.header(400).send(err);
-    });
+    DeveloperProfile.findOne({ user: req.user._id })
+      .then(profile => {
+        let { firstname, lastname, age, sex, skills, bio, experience,
+          education, location, experienceLength, githubURL, isEmployed, about
+        } = req.body;
+
+        skills = skills.split(',');
+
+        const developer = new DeveloperProfile({
+          user: req.user._id,
+          firstname,
+          lastname,
+          age,
+          sex,
+          skills,
+          bio,
+          experience,
+          education,
+          location,
+          experienceLength,
+          githubURL,
+          isEmployed,
+          about
+        });
+        developer.save().then((doc) => {
+          const developer = _.pick(doc, ['firstname', 'lastname', 'age', 'email',
+            'education', 'location', 'experienceLength', 'isEmployed', 'about'])
+          res.json({
+            body: doc
+          });
+        }).catch((err) => {
+          res.header(400).json({
+            name: err.name,
+            message: err.message
+          })
+        });
+      })
+      .catch(err => {
+        res.header(400).json({
+          name: err.name,
+          message: err.message
+        })
+      })
   } else {
-    return res.status(401).json({ error: 'Unauthorized user!' });
+    return res.status(401).json({ message: 'Unauthorized user!' });
   }
 })
 // @route GET route/api/developer
-// @desc Return developers
+// @desc Get developers
 // @acess Private
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  DeveloperProfile.findOne({ user: req.user._id })
-    .populate('user')
-    .then((profile) => {
-      res.json(profile)
-    })
-    .catch((err) => console.log(err))
+  const role = req.user.role;
+
+  if (role === 'admin' || role === "developer") {
+    DeveloperProfile.findOne({ user: req.user._id })
+      .populate('user')
+      .then((profile) => {
+        res.json(profile)
+      })
+      .catch((err) => err)
+  }
+  else {
+    return res.status(401).json({ message: 'Unauthorized user!' });
+  }
 })
 
 // @route GET route/api/developer/id
-// @desc Return specific developer
+// @desc Get specific developer
 // @acess Private
 router.route('/:id')
   .get(passport.authenticate('jwt', { session: false }), (req, res) => {
+    const role = req.user.role;
 
-    const id = req.params.id;
+    if (role === 'admin' || role === 'developer') {
+      const id = req.params.id;
 
-    DeveloperProfile.findById(id)
-      .then((doc) => {
-        if (!doc) new Error(err);
+      DeveloperProfile.findById(id)
+        .then((profile) => {
+          if (!profile) return res.status(404).json({ message: 'No profile to display' });
 
-        res.json({
-          message: 'Success',
-          body: developerProfile
+          res.json({
+            body: profile
+          })
+        }).catch((err) => {
+          res.status(400).json({
+            name: err.name,
+            message: err.message
+          })
         })
-      }).catch((err) => {
-        res.status(400).json({
-          success: false,
-          error: err
-        })
-      })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
+    }
   })
-  // @route GET route/api/developer/id
-  // @desc Return specific developer
+  // @route PATCH route/api/developer/id
+  // @desc Edit developer profile
   // @acess Private
   .patch(passport.authenticate('jwt', { session: false }), (req, res) => {
+    const role = req.user.role;
 
-    const id = req.params.id;
+    if (role === 'admin' || role === 'developer') {
+      const id = req.params.id;
 
-    DeveloperProfile.findById(id)
-      .then((doc) => {
-        if (!doc) new Error(err);
+      DeveloperProfile.findById(id)
+        .then((profile) => {
+          if (!profile) return res.status(404).json({ message: 'No profile to display' });
 
-        res.json({
-          message: 'Success',
-          body: developerProfile
+          const { firstname, lastname, age, sex, skills, bio,
+            experience, education, location, experienceLength, githubURL,
+            isEmployed, about } = profile;
+
+          const { firstname: firstnameUpdate, lastname: lastnameUpdate, age: ageUpdate, sex: sexUpdate,
+            skills: skillsUpdate, bio: bioUpdate, experience: experienceUpdate,
+            education: educationUpdate, location: locationUpdate,
+            experienceLength: experienceLengthUpdate, githubURL: githubURLUpdate,
+            isEmployed: isEmployedUpdate, about: aboutUpdate } = req.body;
+
+          DeveloperProfile.findOneAndUpdate(id, {
+            $set: {
+              firstname: firstnameUpdate || firstname,
+              lastname: lastnameUpdate || lastname,
+              age: ageUpdate || age,
+              sex: sexUpdate || sex,
+              skills: skillsUpdate || skills,
+              bio: bioUpdate || bio,
+              experience: experienceUpdate || experience,
+              education: educationUpdate || education,
+              location: locationUpdate || location,
+              experienceLength: experienceLength || experienceLength,
+              githubURL: githubURLUpdate || githubURL,
+              isEmployed: isEmployedUpdate || isEmployed,
+              about: aboutUpdate || about
+            }
+          }, { new: true })
+            .then(profile => {
+              if (!profile) return res.status(404).json({ message: 'No profile to display' });
+
+              res.json({ body: profile })
+            })
+            .catch(err => {
+              res.status(400).json({
+                name: err.name,
+                message: err.message
+              })
+            })
+        }).catch((err) => {
+          res.status(400).json({
+            name: err.name,
+            message: err.message
+          })
         })
-      }).catch((err) => {
-        res.status(400).json({
-          success: false,
-          error: err
-        })
-      })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
+    }
   })
-  // @route GET route/api/developer/id
-  // @desc Return specific developer
+  // @route DELETE route/api/developer/id
+  // @desc Delete developer profile
   // @acess Private
   .delete(passport.authenticate('jwt', { session: false }), (req, res) => {
+    const role = req.user.role;
 
-    const id = req.params.id;
+    if (role === 'admin' || role === 'developer') {
+      const id = req.params.id;
 
-    DeveloperProfile.findById(id)
-      .then((doc) => {
-        if (!doc) new Error(err);
+      DeveloperProfile.findByIdAndRemove(id)
+        .then((profile) => {
+          if (!profile) return res.status(404).json({ message: 'Profile not found!' })
 
-        res.json({
-          message: 'Success',
-          body: developerProfile
+          res.json({
+            message: 'Success',
+            body: profile
+          })
+        }).catch((err) => {
+          res.status(400).json({
+            message: err.message,
+          })
         })
-      }).catch((err) => {
-        res.status(400).json({
-          success: false,
-          error: err
-        })
-      })
+    } else {
+      return res.status(401).json({ message: 'Unauthorized user!' });
+    }
   })
 
 module.exports = { router }; 

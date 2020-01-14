@@ -10,7 +10,7 @@ const User = require('../models/User');
 const AdminProfile = require('../models/AdminProfile');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { role } = req.user;
+  const { role } = req.user.role;
 
   if (role === 'admin') {
     const { title, body, author, tags } = req.body;
@@ -46,7 +46,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
 //@access Public
 router.get('/', (req, res) => {
   Article.find()
-    .populate('author')
+    .populate('author', ['firstname', 'lastname'])
     .exec()
     .then((docs) => {
       if (docs.length === 0) return res.status(404).json({ message: 'No articles found!' });
@@ -76,7 +76,7 @@ router.route('/:id')
     const id = req.params.id;
     Article
       .findById(id)
-      .populate('author')
+      .populate('author', ['firstname', 'lastname'])
       .exec()
       .then((doc) => {
         if (!doc) return res.status(404).json({ message: 'Article not found' });
@@ -97,12 +97,12 @@ router.route('/:id')
   .delete(passport.authenticate('jwt', { session: false }), (req, res) => {
     const role = req.user.role;
 
-    if (role === "admin") {
+    if (role === 'admin') {
       const id = req.params.id;
       Article.findByIdAndRemove(id).then((doc) => {
         if (!doc) return res.status(404).json({ message: 'Article not found' });
 
-        AdminProfile.findOneAndDelete({ user: req.user._id },
+        AdminProfile.findOneAndUpdate({ user: req.user._id },
           { $pull: { articles: doc._id } },
           { new: true })
           .then((user) => user)
@@ -114,10 +114,10 @@ router.route('/:id')
           body: article
         });
       }).catch((err) => {
-        res.status(400).send({ error: 'An error occured' });
+        res.status(400).json({ name: err.name, message: err.message });
       })
     } else {
-      res.status(401).json({ error: 'Unauthorized user' });
+      res.status(401).json({ name: err.name, message: err.message });
     }
   })
 
@@ -131,29 +131,29 @@ router.route('/:id')
       const id = req.params.id;
 
       Article.findById(id).then((doc) => {
-        const { newTitle, newBody, newAuthor, newTags } = req.body;
+        const { title: titleUpdate, body: bodyUpdate, author: authorUpdate, tags: tagsUpdate } = req.body;
         const { title, body, author, tags } = doc;
 
-        if (!doc) return res.status(404).json({ error: "Article not found" })
+        if (!doc) return res.status(404).json({ message: "Article not found!" })
 
         Article.findByIdAndUpdate(id,
           {
             $set: {
-              title: newTitle || title,
-              body: newBody || body,
-              author: newAuthor || author,
-              tags: newTags || tags
+              title: titleUpdate || title,
+              body: bodyUpdate || body,
+              author: authorUpdate || author,
+              tags: tagsUpdate || tags
             }
           }, { new: false }).then((doc) => {
             const article = _.pick(doc, ['title', 'body', 'author', 'tags']);
-            if (!doc) return res.status(404).json({ error: 'Article not found' });
+            if (!doc) return res.status(404).json({ message: 'Article not found!' });
             res.send(article);
           }).catch((err) => {
-            res.status(400).send({ error: 'An error occured' });
+            res.status(400).json({ message: err.message });
           })
       })
     } else {
-      res.status(401).json({ error: 'Unauthorized user' });
+      res.status(401).json({ message: 'Unauthorized user' });
     }
   });
 

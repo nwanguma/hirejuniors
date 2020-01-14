@@ -22,9 +22,9 @@ app.use(bodyParser.json());
 
 //Express route middleware
 app.use('/api/users', users);
-app.use('/api/recruiterProfile', recruiterProfile);
-app.use('/api/devProfile', devProfile);
-app.use('/api/adminProfile', adminProfile);
+app.use('/api/recruiterprofile', recruiterProfile);
+app.use('/api/devprofile', devProfile);
+app.use('/api/adminprofile', adminProfile);
 app.use('/api/jobs', jobs);
 app.use('/api/articles', articles);
 
