@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 
 const { secretOrKey } = require('../../config/keys');
 const Article = require('../models/Article');
-const User = require('../models/User');
 const AdminProfile = require('../models/AdminProfile');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {

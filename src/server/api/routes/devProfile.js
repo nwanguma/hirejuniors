@@ -16,6 +16,12 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   if (role === 'developer' || role === 'admin') {
     DeveloperProfile.findOne({ user: req.user._id })
       .then(profile => {
+        if (profile) {
+          return res.status(200).json({
+            message: 'A profile exists for this user!'
+          })
+        }
+
         let { firstname, lastname, age, sex, skills, bio, experience,
           education, location, experienceLength, githubURL, isEmployed, about
         } = req.body;

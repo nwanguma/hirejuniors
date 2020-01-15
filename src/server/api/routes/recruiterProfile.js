@@ -15,6 +15,12 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
   if (role === 'recruiter' || role === 'admin') {
     RecruiterProfile.findOne({ user: req.user._id })
       .then(profile => {
+        if (profile) {
+          return res.status(200).json({
+            message: 'A profile exists for this user!'
+          })
+        }
+
         let { firstname, lastname, company, position, jobs } = req.body;
 
         const recruiter = new RecruiterProfile({

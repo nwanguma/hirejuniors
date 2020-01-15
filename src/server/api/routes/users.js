@@ -132,11 +132,11 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
 // @route DELETE api/users/current
 // @desc Delete user
 // @access Private
-router.delete('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
 
   if (role === 'admin') {
-    const id = req.body.id;
+    const id = req.params.id;
 
     User.findByIdAndDelete(id)
       .then((user) => {

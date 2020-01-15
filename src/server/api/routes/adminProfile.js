@@ -16,7 +16,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
     AdminProfile.findOne({ user: req.user._id })
       .then(profile => {
         if (profile) {
-          res.status(200).json({
+          return res.status(200).json({
             message: 'A profile exists for this user!'
           })
         }
@@ -84,7 +84,7 @@ router.route('/:id')
     if (role === 'admin') {
       const id = req.params.id;
 
-      AdminProfile.findById(id)
+      AdminProfile.findOne({ user: id })
         .populate('articles')
         .populate('jobs')
         .exec()
@@ -114,14 +114,14 @@ router.route('/:id')
     if (role === 'admin') {
       const id = req.params.id;
 
-      AdminProfile.findById(id)
+      AdminProfile.findOne({ user: id })
         .then((profile) => {
           if (!profile) return res.status(404).json({ message: 'No profile to display!' });
 
           const { firstname, lastname } = profile;
           const { firstname: firstnameUpdate, lastname: lastnameUpdate } = req.body;
 
-          AdminProfile.findByIdAndUpdate(id,
+          AdminProfile.findOneAndUpdate({ user: id },
             {
               $set:
                 {
@@ -161,7 +161,7 @@ router.route('/:id')
     if (role === 'admin') {
       const id = req.params.id;
 
-      AdminProfile.findByIdAndRemove(id)
+      AdminProfile.findOneAndRemove({ user: id })
         .then((profile) => {
           if (!profile) return res.status(404).json({ message: 'Profile not found!' });
 
