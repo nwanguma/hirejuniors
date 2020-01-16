@@ -17,7 +17,9 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       .then(profile => {
         if (profile) {
           return res.status(200).json({
-            message: 'A profile exists for this user!'
+            error: {
+              message: 'A profile exists for this user!'
+            }
           })
         }
 
@@ -38,19 +40,27 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           });
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           });
         });
       })
       .catch(err => {
         res.status(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         });
       })
   } else {
-    return res.status(401).json({ message: 'Unauthorized user!' });
+    return res.status(401).json({
+      error: {
+        message: 'Unauthorized user!'
+      }
+    });
   }
 })
 // @route GET api/recruiter
@@ -61,7 +71,11 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     .populate('user')
     .populate('jobs')
     .then((profiles) => {
-      if (profiles.length === 0) return res.status(404).json({ message: 'No Recruiters to display' });
+      if (profiles.length === 0) return res.status(404).json({
+        error: {
+          message: 'No Recruiters to display'
+        }
+      });
 
       res.json({
         body: profiles
@@ -69,8 +83,10 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     })
     .catch((err) => {
       res.status(400).json({
-        name: err.name,
-        message: err.message
+        error: {
+          name: err.name,
+          message: err.message
+        }
       })
     })
 })
@@ -94,8 +110,10 @@ router.route('/:id')
         })
       }).catch((err) => {
         res.status(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         })
       })
   })
@@ -110,7 +128,11 @@ router.route('/:id')
 
       RecruiterProfile.findById(id)
         .then((profile) => {
-          if (!profile) return res.status(404).json({ message: 'Profile not found' });
+          if (!profile) return res.status(404).json({
+            error: {
+              message: 'Profile not found'
+            }
+          });
 
           const { firstname, lastname, company, position } = req.body;
           const { firstname: firstnameUpdate, lastname: lastnameUpdate, company: companyUpdate,
@@ -125,7 +147,11 @@ router.route('/:id')
             }
           }, { new: true })
             .then(profile => {
-              if (!profile) return res.status(404).json({ message: 'Profile not found!' });
+              if (!profile) return res.status(404).json({
+                error: {
+                  message: 'Profile not found!'
+                }
+              });
 
               res.json({
                 body: profile
@@ -133,18 +159,26 @@ router.route('/:id')
             })
             .catch(err => {
               res.status(400).json({
-                name: err.name,
-                message: err.message
+                error: {
+                  name: err.name,
+                  message: err.message
+                }
               });
             });
         }).catch((err) => {
           res.status(400).json({
-            success: false,
-            error: err
+            error: {
+              success: false,
+              error: err
+            }
           });
         })
     } else {
-      res.status(401).json({ message: 'Unauthorized user!' });
+      res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   })
   // @route DELETE api/Recruiter/id
@@ -157,19 +191,29 @@ router.route('/:id')
     if (role === 'admin') {
       RecruiterProfile.findByIdAndRemove(id)
         .then((profile) => {
-          if (!profile) return res.status(404).json({ message: 'Profile not found!' });
+          if (!profile) return res.status(404).json({
+            error: {
+              message: 'Profile not found!'
+            }
+          });
 
           res.json({
             body: profile
           })
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     } else {
-      return res.status(401).json({ message: 'User not authorized!' });
+      return res.status(401).json({
+        error: {
+          message: 'User not authorized!'
+        }
+      });
     }
   })
 

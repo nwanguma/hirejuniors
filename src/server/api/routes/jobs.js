@@ -109,7 +109,7 @@ router.route('/:id')
       const id = req.params.id;
 
       Job.findByIdAndRemove(id).then((doc) => {
-        if (!doc) return res.status(400).json({ error: 'Job not found' });
+        if (!doc) return res.status(400).json({ error: { message: 'Job not found' } });
 
         RecruiterProfile.findOneAndUpdate({ user: req.user._id },
           { $pull: { articles: doc._id } },
@@ -127,12 +127,18 @@ router.route('/:id')
         });
       }).catch((err) => {
         res.status(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         })
       })
     } else {
-      return res.status(401).json({ message: 'Unauthorized user!' });
+      return res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   })
   // @route PATCH api/jobs/id
@@ -146,7 +152,11 @@ router.route('/:id')
 
       Job.findById(id)
         .then(job => {
-          if (!job) return res.status(404).json({ message: 'Job not found' });
+          if (!job) return res.status(404).json({
+            error: {
+              message: 'Job not found'
+            }
+          });
 
           const { title, company, location, description, requirement, contact } = job;
           const { titleUpdate, CompanyUpdate, locationUpdate,
@@ -164,7 +174,11 @@ router.route('/:id')
             }
           }, { new: true })
             .then((doc) => {
-              if (!doc) return res.status(400).json({ message: 'Job not found' });
+              if (!doc) return res.status(400).json({
+                error: {
+                  message: 'Job not found'
+                }
+              });
 
               const job = _.pick(doc,
                 ['title', 'company', 'location', 'description',
@@ -176,19 +190,27 @@ router.route('/:id')
               });
             }).catch((err) => {
               res.status(400).json({
-                name: err.name,
-                message: err.message
+                error: {
+                  name: err.name,
+                  message: err.message
+                }
               })
             });
         })
         .catch(err => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     } else {
-      return res.status(401).json({ message: 'Unauthorized user!' });
+      return res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   });
 

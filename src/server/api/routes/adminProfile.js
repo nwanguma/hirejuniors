@@ -17,7 +17,9 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       .then(profile => {
         if (profile) {
           return res.status(200).json({
-            message: 'A profile exists for this user!'
+            error: {
+              message: 'A profile exists for this user!'
+            }
           })
         }
 
@@ -34,15 +36,19 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           });
         }).catch((err) => {
           res.header(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           });
         });
       })
       .catch(err => {
         res.header(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         })
       })
   } else {
@@ -67,7 +73,9 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
       })
       .catch((err) => {
         res.status(400).json({
-          message: err.message
+          error: {
+            message: err.message
+          }
         });
       });
   } else {
@@ -96,8 +104,10 @@ router.route('/:id')
           })
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     }
@@ -143,8 +153,10 @@ router.route('/:id')
         })
         .catch(err => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     }
@@ -170,8 +182,10 @@ router.route('/:id')
           })
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     }

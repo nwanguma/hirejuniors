@@ -18,7 +18,9 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       .then(profile => {
         if (profile) {
           return res.status(200).json({
-            message: 'A profile exists for this user!'
+            error: {
+              message: 'A profile exists for this user!'
+            }
           })
         }
 
@@ -52,19 +54,27 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           });
         }).catch((err) => {
           res.header(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         });
       })
       .catch(err => {
         res.header(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         })
       })
   } else {
-    return res.status(401).json({ message: 'Unauthorized user!' });
+    return res.status(401).json({
+      error: {
+        message: 'Unauthorized user!'
+      }
+    });
   }
 })
 // @route GET route/api/developer
@@ -79,10 +89,21 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
       .then((profile) => {
         res.json(profile)
       })
-      .catch((err) => err)
+      .catch((err) => {
+        res.status(400).json({
+          error: {
+            name: err.name,
+            message: err.message
+          }
+        })
+      })
   }
   else {
-    return res.status(401).json({ message: 'Unauthorized user!' });
+    return res.status(401).json({
+      error: {
+        message: 'Unauthorized user!'
+      }
+    });
   }
 })
 
@@ -98,19 +119,29 @@ router.route('/:id')
 
       DeveloperProfile.findById(id)
         .then((profile) => {
-          if (!profile) return res.status(404).json({ message: 'No profile to display' });
+          if (!profile) return res.status(404).json({
+            error: {
+              message: 'No profile to display'
+            }
+          });
 
           res.json({
             body: profile
           })
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     } else {
-      return res.status(401).json({ message: 'Unauthorized user!' });
+      return res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   })
   // @route PATCH route/api/developer/id
@@ -124,7 +155,11 @@ router.route('/:id')
 
       DeveloperProfile.findById(id)
         .then((profile) => {
-          if (!profile) return res.status(404).json({ message: 'No profile to display' });
+          if (!profile) return res.status(404).json({
+            error: {
+              message: 'No profile to display'
+            }
+          });
 
           const { firstname, lastname, age, sex, skills, bio,
             experience, education, location, experienceLength, githubURL,
@@ -154,24 +189,36 @@ router.route('/:id')
             }
           }, { new: true })
             .then(profile => {
-              if (!profile) return res.status(404).json({ message: 'No profile to display' });
+              if (!profile) return res.status(404).json({
+                error: {
+                  message: 'No profile to display'
+                }
+              });
 
               res.json({ body: profile })
             })
             .catch(err => {
               res.status(400).json({
-                name: err.name,
-                message: err.message
+                error: {
+                  name: err.name,
+                  message: err.message
+                }
               })
             })
         }).catch((err) => {
           res.status(400).json({
-            name: err.name,
-            message: err.message
+            error: {
+              name: err.name,
+              message: err.message
+            }
           })
         })
     } else {
-      return res.status(401).json({ message: 'Unauthorized user!' });
+      return res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   })
   // @route DELETE route/api/developer/id
@@ -185,7 +232,11 @@ router.route('/:id')
 
       DeveloperProfile.findByIdAndRemove(id)
         .then((profile) => {
-          if (!profile) return res.status(404).json({ message: 'Profile not found!' })
+          if (!profile) return res.status(404).json({
+            error: {
+              message: 'Profile not found!'
+            }
+          })
 
           res.json({
             message: 'Success',
@@ -193,11 +244,18 @@ router.route('/:id')
           })
         }).catch((err) => {
           res.status(400).json({
-            message: err.message,
+            error: {
+              message: err.message,
+              name: err.name
+            }
           })
         })
     } else {
-      return res.status(401).json({ message: 'Unauthorized user!' });
+      return res.status(401).json({
+        error: {
+          message: 'Unauthorized user!'
+        }
+      });
     }
   })
 

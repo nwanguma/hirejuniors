@@ -118,14 +118,21 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
 
   User.findById(id)
     .then((user) => {
-      if (!user) return res.status(404).json({ message: 'User does not exist!' });
+      if (!user) return res.status(404).json({
+        error: {
+          message: 'User does not exist!'
+        }
+      });
 
       res.json({
         body: user
       })
     })
     .catch((err) => res.json({
-      message: err.message
+      error: {
+        name: err.name,
+        message: err.message
+      }
     }))
 });
 
@@ -140,14 +147,20 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
 
     User.findByIdAndDelete(id)
       .then((user) => {
-        if (!user) return res.status(404).json({ message: 'User does not exist!' })
+        if (!user) return res.status(404).json({
+          error: {
+            message: 'User does not exist!'
+          }
+        })
 
         res.status(202).json({ message: 'success', body: user })
       })
       .catch((err) => {
         res.status(400).json({
-          name: err.name,
-          message: err.message
+          error: {
+            name: err.name,
+            message: err.message
+          }
         })
       })
   }
