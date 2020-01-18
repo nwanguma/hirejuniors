@@ -9,7 +9,7 @@ const Article = require('../models/Article');
 const AdminProfile = require('../models/AdminProfile');
 
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { role } = req.user.role;
+  const { role } = req.user;
 
   if (role === 'admin') {
     const { title, body, author, tags } = req.body;
@@ -24,7 +24,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
       .save()
       .then((article) => {
         AdminProfile.findOneAndUpdate({ user: req.user._id },
-          { $push: { articles: doc._id } },
+          { $push: { articles: article._id } },
           { new: true })
           .then((user) => user)
           .catch((err) => {
@@ -63,9 +63,7 @@ router.get('/', (req, res) => {
         const article = _.pick(doc, ['title', 'body', 'author', 'tags']);
         articles.push(article)
       });
-      res.json({
-        body: articles
-      });
+      res.json(articles);
     }).catch((err) => {
       res.status(400).json({
         error: {
