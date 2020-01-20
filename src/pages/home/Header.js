@@ -10,7 +10,7 @@ export default (props) => {
         <h1>
           <span className="heading__primary">Hire Juniors</span>
           <span className="heading__secondary">Junior friendly roles for Junior developers</span>
-          <Link className="page-nav" role="button" to="/createProfile">Get started</Link>
+          <Link className="page-nav" role="button" to="/createprofile">Get started</Link>
         </h1>
       </div>
     </header>

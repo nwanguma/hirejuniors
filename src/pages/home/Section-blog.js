@@ -10,10 +10,10 @@ export default (props) => {
       const articles = response.data;
       setArticles(articles);
     }).catch((err) => {
-      if (err && err.response.status === 404) {
-        const error = err.response.data;
-        setError(error);
-      }
+      // if (err && err.response.status === 404) {
+      //   const error = err.response.data;
+      //   setError(error);
+      // }
     })
   }, []);
 

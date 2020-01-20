@@ -4,14 +4,15 @@ import Blog from './Section-blog';
 import Companies from './Section-companies';
 import About from './Section-about';
 import Jobs from './Section-jobs';
-import Footer from './Footer';
+import Footer from '../components/Footer';
+import './home.scss';
 
 export default (props) => {
   return (
     <div className="container">
       <Header />
-      <Jobs />   
-      <About />               
+      <Jobs />
+      <About />
       <Blog />
       <Companies />
       <Footer />

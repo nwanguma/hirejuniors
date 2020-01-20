@@ -1,13 +1,13 @@
 // import React, { useEffect, useState } from 'react';
 
-// const Jobs = () => {
-//   const [jobs, setJobs ] = useState();
+// const Developers = () => {
+//   const [jobs, setDevelopers ] = useState();
 
 //   useEffect(() => {
 //     axios.get('http://localhost:3000/api/jobs')
 //     .then(res => {
-//       const jobs = res.data;
-//       setJobs(jobs)
+//       const developers = res.data;
+//       setDevelopers(jobs)
 //     })
 //     .catch(err => {
 //       console.log(err);
@@ -15,7 +15,7 @@
 //   });
 
 //   return (
-//     {jobs? 'No jobs to display': jobs.map((article, index) => {
+//     {jobs? 'No developers to display': jobs.map((article, index) => {
 //       return <Article key={index} article={article} />
 //     })}
 //   )

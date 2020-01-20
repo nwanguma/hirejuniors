@@ -30,8 +30,7 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           firstname,
           lastname,
           company,
-          position,
-          jobs
+          position
         });
         recruiter.save().then((doc) => {
           const recruiter = _.pick(doc, ['firstname', 'lastname', 'company', 'position', 'jobs', 'user'])
