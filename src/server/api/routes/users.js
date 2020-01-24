@@ -4,6 +4,9 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const _ = require('lodash');
 
+const validateLoginInput = require('../../validation/login');
+const validateRegisterInput = require('../../validation/register');
+
 const { secretOrKey } = require('../../config/keys');
 const User = require('../models/User');
 
@@ -14,13 +17,27 @@ const router = express.Router();
 // @access Public
 router.post('/register', (req, res) => {
   User.findOne({ email: req.body.email }).then((user) => {
-    if (user) return res.status(409).json({ message: 'Email already registered!' });
+
+    const { isValid, errors } = validateRegisterInput(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
     const { email, password, username, role } = req.body;
 
+    if (user) {
+      errors.email = 'Email is already registered';
+      return res.status(409).json(error);
+    }
+
+
     User.findOne({ username })
       .then(user => {
-        if (user) return res.status(409).json({ message: 'Username taken!' });
+        if (user) {
+          errors.username = 'Username taken';
+          return res.status(409).json({ message: 'Username taken!' });
+        }
 
         const newUser = {
           email,
@@ -74,40 +91,45 @@ router.post('/register', (req, res) => {
 // @desc Login user
 // @access Public
 router.post('/login', (req, res) => {
-  const { email, username, password } = req.body;
+  const { errors, isValid } = validateLoginInput(req.body);
 
-  let loginCredentials;
-
-  if (email) {
-    loginCredentials = {
-      email: email
-    }
-  } else if (username) {
-    loginCredentials = {
-      username: username
-    }
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
 
-  User.findOne(loginCredentials).then(user => {
-    if (!user) return res.status(404).json({ message: 'User does not exist' });
+  const { email, username, password } = req.body;
 
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (!isMatch) return res.status(401).json({ message: 'Password incorrect' });
+  if (email || username) {
+    const credential = email ? 'email' : 'username';
+    const value = email ? email : username;
 
-      const payload = { username: user.username };
+    User.findOne({ [credential]: [value] }).then(user => {
+      if (!user) {
+        errors.credential = 'User not found'
+        return res.status(404).json(errors);
+      }
 
-      jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
-        if (err) new Error('Failed to generate token' + err);
+      bcrypt.compare(password, user.password).then(isMatch => {
+        if (!isMatch) {
+          errors.password = 'Password incorrect';
+          return res.status(401).json(errors.password);
+        }
 
-        res.header('Authorization', `Bearer ${token}`).json({
-          success: true,
-          body: user
+        const payload = { username: user.username };
+
+        jwt.sign(payload, secretOrKey, { expiresIn: 3600 }, (err, token) => {
+          if (err) new Error('Failed to generate token' + err);
+
+          res.header('Authorization', `Bearer ${token}`).json({
+            success: true,
+            body: user
+          });
         });
       });
+    }).catch((err) => {
+      res.status(400).json({ message: err.message });
     });
-  }).catch((err) => {
-    res.status(400).json({ message: err.message });
-  });
+  }
 });
 
 // @route GET api/users/current

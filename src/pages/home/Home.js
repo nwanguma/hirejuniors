@@ -1,20 +1,23 @@
 import React from 'react';
-import Header from './Header';
-import Blog from './Section-blog';
-import Companies from './Section-companies';
+
 import About from './Section-about';
-import Jobs from './Section-jobs';
+import Blog from './Section-blog';
 import Footer from '../components/Footer';
+import Header from './Header';
+import MainNav from './MainNav';
+import Partners from './Section-partners';
+import Jobs from './Section-jobs';
 import './home.scss';
 
 export default (props) => {
   return (
     <div className="container">
+      <MainNav />
       <Header />
       <Jobs />
       <About />
       <Blog />
-      <Companies />
+      <Partners />
       <Footer />
     </div>
   )
