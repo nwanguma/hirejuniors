@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const _ = require('lodash');
 
+const validateRecruiterProfileInput = require('../../validation/recruiterProfile');
+
 const RecruiterProfile = require('../models/RecruiterProfile');
 
 // @route POST recruiters/create
@@ -11,6 +13,12 @@ const RecruiterProfile = require('../models/RecruiterProfile');
 // @acess Private Admin and Recruiter
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
   const role = req.user.role;
+
+  const { errors, isValid } = validateRecruiterProfileInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   if (role === 'recruiter' || role === 'admin') {
     RecruiterProfile.findOne({ user: req.user._id })

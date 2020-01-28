@@ -10,8 +10,8 @@ import Job from '../pages/jobs/Job';
 import Jobs from '../pages/jobs/Jobs';
 import NotFoundPage from '../pages/notFoundPage/NotFoundPage';
 import Profile from '../pages/profile/Profile';
-import SignIn from '../pages/signIn/SignIn.js';
-import SignUp from '../pages/signUp/SignUp.js';
+import Signin from '../pages/signin/Signin.js';
+import Signup from '../pages/signup/Signup.js';
 import Talent from '../pages/talent/Developers';
 
 
@@ -27,8 +27,8 @@ export default () => {
         <Route path="/jobs"><Jobs /></Route>
         <Route path="/jobs/:id"><Job /></Route>
         <Route path="/profile"><Profile /></Route>
-        <Route path="/signin"><SignIn /></Route>
-        <Route path="/signup"><SignUp /></Route>
+        <Route path="/signin"><Signin /></Route>
+        <Route path="/signup"><Signup /></Route>
         <Route path="/talent"><Talent /></Route>
         <Route><NotFoundPage /></Route>
       </Switch>

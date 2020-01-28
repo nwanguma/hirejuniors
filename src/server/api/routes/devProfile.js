@@ -7,13 +7,22 @@ const _ = require('lodash');
 const DeveloperProfile = require('../models/DeveloperProfile');
 const AdminProfile = require('../models/AdminProfile');
 
+const validateDeveloperProfileInput = require('../../validation/developerProfile');
+
 // @route GET route/api/developers/create
 // @desc create developer profile
 // @acess Private Admin and Developer
 router.post('/create', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log('this ran at least once please for the love of god')
   const role = req.user.role;
 
   if (role === 'developer' || role === 'admin') {
+    const { errors, isValid } = validateDeveloperProfileInput(req.body);
+
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     DeveloperProfile.findOne({ user: req.user._id })
       .then(profile => {
         if (profile) {
@@ -25,8 +34,11 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
         }
 
         let { firstname, lastname, age, sex, skills, bio, experience,
-          education, location, experienceLength, githubURL, isEmployed, about
+          education, location, experienceLength, githubURL, website, linkedinURL, twitterURL
         } = req.body;
+
+        let { company, title, isCurrent, description } = req.body.experience;
+        let { institution, degree } = req.body.education;
 
         skills = skills.split(',');
 
@@ -38,17 +50,27 @@ router.post('/create', passport.authenticate('jwt', { session: false }), (req, r
           sex,
           skills,
           bio,
-          experience,
-          education,
+          experience: {
+            company,
+            title,
+            isCurrent,
+            location,
+            description,
+          },
+          education: {
+            institution,
+            degree
+          },
           location,
           experienceLength,
           githubURL,
-          isEmployed,
-          about
+          website,
+          linkedinURL,
+          twitterURL
         });
         developer.save().then((doc) => {
-          const developer = _.pick(doc, ['firstname', 'lastname', 'age', 'email',
-            'education', 'location', 'experienceLength', 'isEmployed', 'about'])
+          // const developer = _.pick(doc, ['firstname', 'lastname', 'age', 'email',
+          //   'education', 'location', 'experienceLength', 'isEmployed', 'about'])
           res.json({
             body: doc
           });
@@ -117,13 +139,15 @@ router.route('/:id')
     if (role === 'admin' || role === 'developer') {
       const id = req.params.id;
 
-      DeveloperProfile.findById(id)
+      DeveloperProfile.findOne({ user: id })
         .then((profile) => {
           if (!profile) return res.status(404).json({
             error: {
               message: 'No profile to display'
             }
           });
+
+          console.log(profile.user._id)
 
           res.json({
             body: profile
@@ -148,12 +172,17 @@ router.route('/:id')
   // @desc Edit developer profile
   // @acess Private
   .patch(passport.authenticate('jwt', { session: false }), (req, res) => {
+    const id = req.params.id;
     const role = req.user.role;
 
     if (role === 'admin' || role === 'developer') {
-      const id = req.params.id;
+      const { errors, isValid } = validateDeveloperProfileInput(req.body);
 
-      DeveloperProfile.findById(id)
+      if (!isValid) {
+        return res.status(400).json(errors);
+      }
+
+      DeveloperProfile.findOne({ user: id })
         .then((profile) => {
           if (!profile) return res.status(404).json({
             error: {
@@ -161,17 +190,23 @@ router.route('/:id')
             }
           });
 
-          const { firstname, lastname, age, sex, skills, bio,
-            experience, education, location, experienceLength, githubURL,
-            isEmployed, about } = profile;
+          const { firstname, lastname, age, sex, skills, bio, experience,
+            education, location, experienceLength, githubURL, website, linkedinURL, twitterURL
+          } = req.body;
+
+          const { company, title, isCurrent, description } = req.body.experience;
+          const { institution, degree } = req.body.education;
 
           const { firstname: firstnameUpdate, lastname: lastnameUpdate, age: ageUpdate, sex: sexUpdate,
             skills: skillsUpdate, bio: bioUpdate, experience: experienceUpdate,
             education: educationUpdate, location: locationUpdate,
             experienceLength: experienceLengthUpdate, githubURL: githubURLUpdate,
-            isEmployed: isEmployedUpdate, about: aboutUpdate } = req.body;
+            website: websiteUpdate, linkedinURL: linkedinURLUpdate, twitterURL: twitterURLUpdate } = req.body;
 
-          DeveloperProfile.findOneAndUpdate(id, {
+          const { company: companyUpdate, title: titleUpdate, isCurrent: isCurrentUpdate, description: descriptionUpdate } = req.body.education;
+          const { institution: institutionUpdate, degree: degreeUpdate } = req.body.education;
+
+          DeveloperProfile.findOneAndUpdate({ user: id }, {
             $set: {
               firstname: firstnameUpdate || firstname,
               lastname: lastnameUpdate || lastname,
@@ -179,13 +214,22 @@ router.route('/:id')
               sex: sexUpdate || sex,
               skills: skillsUpdate || skills,
               bio: bioUpdate || bio,
-              experience: experienceUpdate || experience,
-              education: educationUpdate || education,
+              experience: {
+                company: companyUpdate || company,
+                title: titleUpdate || title,
+                isCurrent: isCurrentUpdate || isCurrent,
+                description: descriptionUpdate || description
+              },
+              education: {
+                institution: institutionUpdate || institution,
+                degree: degreeUpdate || degree
+              },
               location: locationUpdate || location,
               experienceLength: experienceLength || experienceLength,
               githubURL: githubURLUpdate || githubURL,
-              isEmployed: isEmployedUpdate || isEmployed,
-              about: aboutUpdate || about
+              website: websiteUpdate || website,
+              linkedinURL: linkedinURLUpdate || linkedinURL,
+              twitterURL: twitterURLUpdate || twitterURL
             }
           }, { new: true })
             .then(profile => {
@@ -230,7 +274,7 @@ router.route('/:id')
     if (role === 'admin' || role === 'developer') {
       const id = req.params.id;
 
-      DeveloperProfile.findByIdAndRemove(id)
+      DeveloperProfile.findOneAndRemove({ user: id })
         .then((profile) => {
           if (!profile) return res.status(404).json({
             error: {

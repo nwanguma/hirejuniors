@@ -1,2 +1,4 @@
 export const START_REGISTER_USER = 'START_REGISTER_USER';
 export const START_LOGIN_USER = 'START_LOGIN_USER';
+export const SET_ERRORS = 'SET_ERRORS';
+export const CLEAR_ERRORS = 'CLEAR_ERRORS';

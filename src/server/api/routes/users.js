@@ -16,6 +16,7 @@ const router = express.Router();
 // @desc Register users
 // @access Public
 router.post('/register', (req, res) => {
+  console.log('the user route was hit')
   User.findOne({ email: req.body.email }).then((user) => {
 
     const { isValid, errors } = validateRegisterInput(req.body);

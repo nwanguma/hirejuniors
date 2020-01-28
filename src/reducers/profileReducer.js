@@ -12,7 +12,6 @@ const defaultState = {
   link: '',
   portfolio: '',
   page: '',
-  link: '',
   preferred: '',
   salary: ''
 }

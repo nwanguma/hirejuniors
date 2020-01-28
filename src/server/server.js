@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 //Express route middleware
 app.use('/api/users', users);
 app.use('/api/recruiterprofile', recruiterProfile);
-app.use('/api/devprofile', devProfile);
+app.use('/api/developerprofile', devProfile);
 app.use('/api/adminprofile', adminProfile);
 app.use('/api/jobs', jobs);
 app.use('/api/articles', articles);
