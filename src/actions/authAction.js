@@ -15,6 +15,10 @@ export const startRegisterUser = (payload, history) => dispatch => {
 export const startLogin = (payload, history) => (dispatch) => {
   return axios.post('http://localhost:3000/api/users/login', payload)
     .then(res => {
+      const token = res.data;
+
+      localStorage.setItem('jwttoken', token);
+      setToken(token);
       history.push('/profile');
     })
     .catch(err => {

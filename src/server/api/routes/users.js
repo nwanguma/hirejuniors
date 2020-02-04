@@ -16,20 +16,18 @@ const router = express.Router();
 // @desc Register users
 // @access Public
 router.post('/register', (req, res) => {
-  console.log('the user route was hit')
+  const { isValid, errors } = validateRegisterInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   User.findOne({ email: req.body.email }).then((user) => {
-
-    const { isValid, errors } = validateRegisterInput(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
     const { email, password, username, role } = req.body;
 
     if (user) {
       errors.email = 'Email is already registered';
-      return res.status(409).json(error);
+      return res.status(409).json(errors);
     }
 
 
@@ -37,7 +35,7 @@ router.post('/register', (req, res) => {
       .then(user => {
         if (user) {
           errors.username = 'Username taken';
-          return res.status(409).json({ message: 'Username taken!' });
+          return res.status(409).json(errors);
         }
 
         const newUser = {
