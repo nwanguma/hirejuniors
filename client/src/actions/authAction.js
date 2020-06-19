@@ -18,7 +18,7 @@ export const startLogin = (payload, history) => (dispatch) => {
       const token = res.data;
 
       localStorage.setItem('jwttoken', token);
-      setToken(token);
+      // setToken(token);
       history.push('/profile');
     })
     .catch(err => {
