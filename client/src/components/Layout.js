@@ -5,25 +5,27 @@ import routes from "../router/AppRouter";
 import Header from "./Header";
 import Footer from "./Footer";
 
-import styles from "./Layout";
+import styles from "./Layout.module.scss";
 
 export const Layout = (props) => {
   return (
     <div className={styles.layout}>
       <Router>
         <Header />
-        <Switch>
-          {routes.map((route, index) => {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                exact={route.exact}
-                component={route.main}
-              />
-            );
-          })}
-        </Switch>
+        <div className={styles.main}>
+          <Switch>
+            {routes.map((route, index) => {
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  exact={route.exact}
+                  component={route.main}
+                />
+              );
+            })}
+          </Switch>
+        </div>
         <Footer />
       </Router>
     </div>

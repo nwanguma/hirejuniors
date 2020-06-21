@@ -1,56 +1,88 @@
+@import "../../assets/styles/config/variables.scss";
+@import "../../assets/styles/config/mixins";
+
 .container {
+  height: 100%;
+
   .landing {
     height: 100vh;
     display: flex;
     justify-content: space-between;
 
     .content {
-      position: relative;
-      top: 2rem;
-      flex: 0 0 33vw;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      flex: 0 0 33%;
+      padding-top: 9vw;
+
+      @include respond($tablet-landscape) {
+        flex: 0 0 45rem;
+        padding-top: 12vw;
+      }
+
+      @include respond($phone-large) {
+        flex: 1;
+        padding-top: 15vh;
+      }
 
       .tag {
-        width: 100%;
-        height: 5rem;
-        background-color: #bdc1da;
+        height: 3em;
+        background-color: $hirejuniors-color-secondary;
         margin: 0 auto;
+        margin-bottom: 2rem;
         width: 80%;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 5px;
         font-weight: 500;
+
+        @include respond($phone-medium) {
+          width: 95%;
+        }
       }
 
-      .authContainer {
+      .auth_container {
+        flex: 0 0 70%;
+
         .form {
           margin: 0 auto;
           width: 80%;
-          height: 70vh;
+          height: 45rem;
           box-shadow: 15px 30px 40px rgba(64, 25, 109, 0.07);
           border-radius: 5px;
-          padding: 40px 50px 50px 40px;
+          padding: 2em 4em 3em 3em;
           display: flex;
           flex-direction: column;
           justify-content: space-evenly;
+
+          @include respond($phone-medium) {
+            width: 95%;
+          }
+
+          @include respond-custom(22.18em) {
+            padding: 2em 3em 2em 3em;
+          }
+
+          @include respond-custom(21.25em) {
+            padding: 1em 2em 1em 2em;
+          }
+
+          @include respond-custom(19.6875em) {
+            min-width: 31.5rem;
+          }
 
           .heading {
             flex: 0 0 23%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            .headingPrimary {
+            .heading_primary {
               font-size: 1.9rem;
             }
 
-            .headingSecondary {
+            .heading_secondary {
               color: #a8a7a7;
               font-size: 1.2rem;
-              line-height: 16px;
+              line-height: 18px;
             }
           }
 
@@ -67,8 +99,15 @@
               border: 0;
               font-family: inherit;
               padding: 3px;
-              border-radius: 5px;
+              padding-right: 3.5rem;
               font-family: "Open Sans", sans-serif;
+              outline: 0;
+              color: #302f2f;
+            }
+
+            input:active,
+            input:focus {
+              border-bottom: 2px solid $hirejuniors-color-primary;
             }
 
             input::placeholder {
@@ -86,45 +125,103 @@
             }
           }
 
-          .usernameField {
+          .username_field {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
           }
 
-          .passwordField {
+          .password_field {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
           }
 
-          button {
-            width: 45%;
-            font-size: 1.45rem;
-            height: 3.5rem;
-            color: #eee;
-            border: 0;
-            background-color: #303268;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-          }
+          .submit {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-          button:hover {
-            color: #303268;
-            background-color: #eee;
-            border: 2px solid #303268;
+            button {
+              width: 45%;
+              font-size: 1.45rem;
+              height: 3.5rem;
+              color: #eee;
+              border: 0;
+              background-color: $hirejuniors-color-primary;
+              border-radius: 5px;
+              font-weight: bold;
+              cursor: pointer;
+            }
+
+            button:hover {
+              color: $hirejuniors-color-primary;
+              background-color: #eee;
+              border: 2px solid $hirejuniors-color-primary;
+            }
+
+            p {
+            }
           }
         }
       }
     }
-    .landingIllustration {
-      flex: 0 0 65vw;
+    .landing_illustration {
+      flex: 0 0 67%;
+      padding-top: 8%;
+      text-align: center;
+
+      @include respond($phone-large) {
+        display: none;
+      }
 
       img {
-        width: 100%;
+        width: 60%;
         height: 100%;
+
+        @include respond($tablet-landscape) {
+          width: 80%;
+        }
+
+        @include respond($tablet) {
+          width: 90%;
+        }
       }
     }
+  }
+  .job_snippets,
+  .talent_snippets,
+  .about {
+    height: 40vh;
+    padding: 2rem 7rem;
+    display: flex;
+    align-items: center;
+
+    @include respond($tablet) {
+      height: 40rem;
+      padding: 1rem 4rem;
+    }
+
+    > .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      @include respond($tablet) {
+        flex-direction: column;
+      }
+
+      div {
+        flex: 0 0 20%;
+
+        @include respond($tablet) {
+          flex: 0 0 15%;
+        }
+      }
+    }
+  }
+
+  .talent_snippets {
+    background-color: $hirejuniors-color-tertiary;
   }
 }

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import eyeClosed from "../../assets/images/eyeClosed.svg";
 import eyeOpen from "../../assets/images/eyeOpen.svg";
 import landingPageIllustration from "../../assets/images/Group of Black Men and Women in Office Setting B.svg";
-
 import styles from "./Home.module.scss";
 
 export const Home = (props) => {
@@ -14,27 +13,27 @@ export const Home = (props) => {
       <section className={styles.landing}>
         <div className={styles.content}>
           <div className={styles.tag}>
-            <p>Africa's greatest talent all in one place.</p>
+            <p>Africa's greatest talents all in one place.</p>
           </div>
-          <div className={styles.authContainer}>
+          <div className={styles.auth_container}>
             <form className={styles.form} autoComplete="off">
               <div className={styles.heading}>
-                <h3 className={styles.headingPrimary}>Sign in</h3>
-                <p className={styles.headingSecondary}>
+                <h3 className={styles.heading_primary}>Sign in</h3>
+                <p className={styles.heading_secondary}>
                   To sign in, please type in the email address linked to your
-                  hireJuniors account and your hireJuniours password.
+                  hireJuniors account and your hireJuniors password.
                 </p>
               </div>
-              <div className={styles.usernameField}>
-                <label for="username">Username or Email</label>
+              <div className={styles.username_field}>
+                <label htmlFor="username">Username or Email</label>
                 <input
                   name="username"
                   type="text"
                   placeholder="user@email.com"
                 />
               </div>
-              <div className={styles.passwordField}>
-                <label for="password">Password</label>
+              <div className={styles.password_field}>
+                <label htmlFor="password">Password</label>
                 <input
                   name="password"
                   type={showPasswordText ? "text" : "password"}
@@ -47,19 +46,82 @@ export const Home = (props) => {
                   />
                 </span>
               </div>
-              <button>Sign In</button>
+              <div className={styles.submit}>
+                <button>Sign In</button>
+                <p>Forgot password?</p>
+              </div>
+              <p>Not registered? create account</p>
             </form>
           </div>
         </div>
-        <div className={styles.landingIllustration}>
-          <img src={landingPageIllustration} alt="young people in office" />
+        <div className={styles.landing_illustration}>
+          <img src={landingPageIllustration} alt="young people in an office" />
+        </div>
+      </section>
+      <section className={styles.job_snippets}>
+        <div className={styles.container}>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+        </div>
+      </section>
+      <section className={styles.talent_snippets}>
+        <div className={styles.container}>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
         </div>
       </section>
       <section className={styles.about}>
-        <div className={styles.aboutContainer}>
-          <div></div>
-          <div></div>
-          <div></div>
+        <div className={styles.container}>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
         </div>
       </section>
     </div>
