@@ -189,9 +189,10 @@
       }
     }
   }
+  .about,
   .job_snippets,
   .talent_snippets,
-  .about {
+  .partners {
     height: 40vh;
     padding: 2rem 7rem;
     display: flex;
@@ -221,6 +222,7 @@
     }
   }
 
+  .about,
   .talent_snippets {
     background-color: $hirejuniors-color-tertiary;
   }

@@ -58,6 +58,28 @@ export const Home = (props) => {
           <img src={landingPageIllustration} alt="young people in an office" />
         </div>
       </section>
+      <section className={styles.about}>
+        <div className={styles.container}>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+          <div>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
+            libero illum laboriosam saepe velit quod vero accusantium ipsam
+            magnam. Facere, ea. Ullam vitae quibusdam, minus incidunt quod
+            mollitia labore facilis.
+          </div>
+        </div>
+      </section>
       <section className={styles.job_snippets}>
         <div className={styles.container}>
           <div>
@@ -102,7 +124,7 @@ export const Home = (props) => {
           </div>
         </div>
       </section>
-      <section className={styles.about}>
+      <section className={styles.partners}>
         <div className={styles.container}>
           <div>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque
