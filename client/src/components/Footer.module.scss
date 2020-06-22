@@ -6,24 +6,21 @@
   color: #eee;
   font-weight: 100;
   height: 35vh;
-  background-color: #303268;
+  background-color: $hirejuniors-color-primary;
   display: flex;
   justify-content: space-around;
+  font-size: 1.3rem;
 
   @include respond($tablet) {
     padding: 2rem 1rem;
   }
 
   div {
-    p {
-      font-size: 1.45rem;
-    }
-
     ul {
       list-style: none;
+
       li {
         margin-bottom: 1.5rem;
-
         a {
           text-decoration: none;
           color: #eee;

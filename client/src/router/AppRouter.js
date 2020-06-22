@@ -28,7 +28,7 @@ const routes = [
     main: () => <Blog />,
   },
   {
-    path: "/developer-dashboard",
+    path: "/dashboard",
     main: () => <Dashboard />,
   },
   {

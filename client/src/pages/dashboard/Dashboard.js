@@ -1,21 +1,53 @@
-import React from 'react';
-import Nav from './Nav';
-import { connect } from 'react-redux';
+import React, { useEffect } from "react";
+import { Switch, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
-export const Dashboard = ({ profile }) => {
-  console.log(profile);
+import { updateLayout } from "../../actions/layoutAction";
+import Sidebar from "../../components/Sidebar";
+import routes from "../../router/DashboardRouter";
+
+import styles from "./Dashboard.module.scss";
+
+export const Dashboard = ({ updateLayout }) => {
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (!isCancelled)
+      updateLayout({
+        header: false,
+        footer: false,
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
   return (
-    <div>
-      <Nav />
-      <p>This is the dashboard page</p>
+    <div className={styles.dashboard}>
+      <Sidebar />
+      <main className={styles.main}>
+        <Switch>
+          {routes.map((route, index) => {
+            return (
+              <Route
+                key={index}
+                component={route.main}
+                path={route.path}
+                isExact={route.exact}
+              />
+            );
+          })}
+        </Switch>
+      </main>
     </div>
-  )
-}
+  );
+};
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    profile: state.profile
-  }
-}
+    updateLayout: (payload) => dispatch(updateLayout(payload)),
+  };
+};
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(undefined, mapDispatchToProps)(Dashboard);

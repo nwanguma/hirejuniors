@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
 import routes from "../router/AppRouter";
 import Header from "./Header";
@@ -7,11 +8,11 @@ import Footer from "./Footer";
 
 import styles from "./Layout.module.scss";
 
-export const Layout = (props) => {
+export const Layout = ({ layout }) => {
   return (
     <div className={styles.layout}>
       <Router>
-        <Header />
+        {layout.header && <Header />}
         <div className={styles.main}>
           <Switch>
             {routes.map((route, index) => {
@@ -26,10 +27,16 @@ export const Layout = (props) => {
             })}
           </Switch>
         </div>
-        <Footer />
+        {layout.footer && <Footer />}
       </Router>
     </div>
   );
 };
 
-export default Layout;
+const mapStateToProps = (state) => {
+  return {
+    layout: state.layout,
+  };
+};
+
+export default connect(mapStateToProps)(Layout);

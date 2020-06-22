@@ -1,0 +1,36 @@
+@import "../assets/styles/config/mixins";
+@import "../assets/styles/config/variables";
+
+.sidebar {
+  flex: 0 0 19rem;
+  max-height: 100vh;
+  background-color: $hirejuniors-color-primary;
+  color: #eee;
+  font-size: 1.3rem;
+  padding: 5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .nav_item {
+    a {
+      display: flex;
+      width: 100%;
+      padding: 1.3rem;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 1.8rem;
+        margin-right: 1.5rem;
+      }
+    }
+
+    &:hover {
+      background-color: #030f38;
+    }
+  }
+}
