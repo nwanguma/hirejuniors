@@ -34,7 +34,7 @@ export const Dashboard = ({ updateLayout }) => {
                 key={index}
                 component={route.main}
                 path={route.path}
-                isExact={route.exact}
+                exact={route.exact}
               />
             );
           })}

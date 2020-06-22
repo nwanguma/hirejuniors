@@ -7,10 +7,20 @@
   background-color: $hirejuniors-color-primary;
   color: #eee;
   font-size: 1.3rem;
-  padding: 5rem 1.5rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    padding: 1.3rem;
+
+    img {
+      width: 2rem;
+    }
+  }
 
   .nav_item {
     a {
